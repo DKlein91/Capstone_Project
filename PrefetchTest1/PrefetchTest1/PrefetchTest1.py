@@ -15,24 +15,27 @@ class Prefetch(object):
         self.pFileName = infile
 
         with open(infile, "rb") as f:
-            d = DecompressWin10()
-            decompressed = d.decompress(infile)
+            if f.read(3) == "MAM":
+                f.close()
 
-            t = tempfile.mkstemp()
+                d = DecompressWin10()
+                decompressed = d.decompress(infile)
 
-            with open(t[1], "wb+") as f:
-                f.write(decompressed)
-                f.seek(0)
+                t = tempfile.mkstemp()
 
-                self.parseHeader(f)
-                self.fileInformation26(f)
-                self.metricsArray23(f)
-                self.traceChainsArray30(f)
-                self.volumeInformation30(f)
-                self.getTimeStamps(self.lastRunTime)
-                self.directoryStrings(f)
-                self.getFilenameStrings(f)
-                return
+                with open(t[1], "wb+") as f:
+                    f.write(decompressed)
+                    f.seek(0)
+
+                    self.parseHeader(f)
+                    self.fileInformation26(f)
+                    self.metricsArray23(f)
+                    self.traceChainsArray30(f)
+                    self.volumeInformation30(f)
+                    self.getTimeStamps(self.lastRunTime)
+                    self.directoryStrings(f)
+                    self.getFilenameStrings(f)
+                    return
 
         with open(infile, "rb") as f:
             self.parseHeader(f)
@@ -89,6 +92,24 @@ class Prefetch(object):
         self.runCount = struct.unpack_from("I", infile.read(4))[0]
         unknown2 = infile.read(84)
 
+    def fileInformation26(self, infile):
+        # File Information
+        # 224 bytes
+        self.metricsOffset = struct.unpack_from("I", infile.read(4))[0]
+        self.metricsCount = struct.unpack_from("I", infile.read(4))[0]
+        self.traceChainsOffset = struct.unpack_from("I", infile.read(4))[0]
+        self.traceChainsCount = struct.unpack_from("I", infile.read(4))[0]
+        self.filenameStringsOffset = struct.unpack_from("I", infile.read(4))[0]
+        self.filenameStringsSize = struct.unpack_from("I", infile.read(4))[0]
+        self.volumesInformationOffset = struct.unpack_from("I", infile.read(4))[0]
+        self.volumesCount = struct.unpack_from("I", infile.read(4))[0]
+        self.volumesInformationSize = struct.unpack_from("I", infile.read(4))[0]
+        unknown0 = infile.read(8)
+        self.lastRunTime = infile.read(64)
+        unknown1 = infile.read(16)
+        self.runCount = struct.unpack_from("I", infile.read(4))[0]
+        unknown2 = infile.read(96)
+
     def metricsArray23(self, infile):
         # File Metrics Array
         # 32 bytes per array, not parsed in this script
@@ -137,30 +158,19 @@ class Prefetch(object):
             count += 1
             infile.seek(self.volumesInformationOffset + (104 * count))
 
-
-    def fileInformation26(self, infile):
-        # File Information
-        # 224 bytes
-        self.metricsOffset = struct.unpack_from("I", infile.read(4))[0]
-        self.metricsCount = struct.unpack_from("I", infile.read(4))[0]
-        self.traceChainsOffset = struct.unpack_from("I", infile.read(4))[0]
-        self.traceChainsCount = struct.unpack_from("I", infile.read(4))[0]
-        self.filenameStringsOffset = struct.unpack_from("I", infile.read(4))[0]
-        self.filenameStringsSize = struct.unpack_from("I", infile.read(4))[0]
-        self.volumesInformationOffset = struct.unpack_from("I", infile.read(4))[0]
-        self.volumesCount = struct.unpack_from("I", infile.read(4))[0]
-        self.volumesInformationSize = struct.unpack_from("I", infile.read(4))[0]
-        unknown0 = infile.read(8)
-        self.lastRunTime = infile.read(64)
-        unknown1 = infile.read(16)
-        self.runCount = struct.unpack_from("I", infile.read(4))[0]
-        unknown2 = infile.read(96)
+    def traceChainsArray17(self, infile):
+        # Read through the Trace Chains Array
+        # Not being parsed for information
+        # 12 bytes
+        infile.read(12)
 
     def traceChainsArray30(self, infile):
         # Trace Chains Array
         # Read though, not being parsed for information
         # 8 bytes
         infile.read(8)
+
+
 
     def volumeInformation30(self, infile):
         # Volumes Information
@@ -194,8 +204,6 @@ class Prefetch(object):
             
             count += 1
             infile.seek(self.volumesInformationOffset + (96 * count))
-
-
 
     def getFilenameStrings(self, infile):
         # Parses filename strings from the PF file
@@ -252,7 +260,6 @@ class Prefetch(object):
         
         return int(byteString, 16)
 
-
     def prettyPrint(self):
         # Prints important Prefetch data in a structured format
         banner = "=" * (len(ntpath.basename(self.pFileName)) + 2)
@@ -269,9 +276,9 @@ class Prefetch(object):
         
         print ("\nVolume Information:")
         for i in self.volumesInformationArray:
-            print ("    Volume Name: " + i["Volume Name"])
-            print ("    Creation Date: " + i["Creation Date"])
-            print ("    Serial Number: " + i["Serial Number"])
+            print ("    Volume Name: " + i)
+            print ("    Creation Date: " + i)
+            print ("    Serial Number: " + i)
             print ("")
 
         print ("Directory Strings:")
@@ -295,8 +302,20 @@ class Prefetch(object):
             count += 1
 
         print ("")
+            
+# The code in the class below was taken and then modified from Francesco 
+# Picasso's w10pfdecomp.py script. This modification makes two simple changes:
+#
+#    - Wraps Francesco's logic in a Python class 
+#    - Returns a bytearray of uncompressed data instead of writing it to a new 
+#      file, like Francesco's original code did
+#
+# Author's name: Francesco "dfirfpi" Picasso
+# Author's email: francesco.picasso@gmail.com
+# Source: https://github.com/dfirfpi/hotoloti/blob/master/sas/w10pfdecomp.py
+# License: http://www.apache.org/licenses/LICENSE-2.0
 
-
+#Windows-only utility to decompress MAM compressed files
 class DecompressWin10(object):
     def __init__(self):
         pass
@@ -382,9 +401,71 @@ class DecompressWin10(object):
 
         return bytearray(ntDecompressed)
 
+
+
+
+
+
+
+
+
 def main():
-    f = open('C:\Windows\Prefetch\CHROME.EXE-D999B1BB.pf', 'r')
-    p = Prefetch('C:\Windows\Prefetch\CHROME.EXE-D999B1BB.pf')
-    p.prettyPrint()
+    p = ArgumentParser()
+    p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
+    p.add_argument("-e", "--executed", help="Sort PF files by ALL execution times")
+    p.add_argument("-f", "--file", help="Parse a given Prefetch file")
+    args = p.parse_args()
+
+    if args.file:
+        if args.file.endswith(".pf"):
+            if os.path.getsize(args.file) > 0:
+                try:
+                    p = Prefetch(args.file)
+                except Exception as e:
+                    print ("[ - ] {}".format(e))
+                    sys.exit("[ - ] {} could not be parsed".format(args.file))
+                
+                if args.csv:
+                    print ("Last Executed, Executable Name, Run Count")
+                    print ("{}, {}-{}, {}".format(p.timestamps[0], p.executableName, p.hash, p.runCount))
+                else:
+                    p.prettyPrint()
+            else:
+                print ("[ - ] {}: Zero byte Prefetch file".format(args.file))
+
+    elif args.directory:
+        if not (args.directory.endswith("/") or args.directory.endswith("\\")):
+            sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
+
+        if os.path.isdir(args.directory):
+            if args.csv:
+                print ("Last Executed, MFT Seq Number, MFT Record Number, Executable Name, Run Count")
+
+                for i in os.listdir(args.directory):
+                    if i.endswith(".pf"):
+                        if os.path.getsize(args.directory + i) > 0:
+                            try:
+                                p = Prefetch(args.directory + i)
+                            except Exception as e:
+                                print ("[ - ] {} could not be parsed".format(i))
+                            print ("{},{},{},{},{}".format(p.timestamps[0], p.mftSeqNumber, p.mftRecordNumber, p.executableName, p.runCount))
+                        else:
+                            print ("[ - ] {}: Zero-byte Prefetch File".format(i))
+                    else:
+                        continue
+
+            else:
+                for i in os.listdir(args.directory):
+                    if i.endswith(".pf"):
+                        if os.path.getsize(args.directory + i):
+                            try:
+                                p = Prefetch(args.directory + i)
+                                p.prettyPrint()
+                            except Exception as e:
+                                print ("[ - ] {} could not be parsed".format(i))
+                        else:
+                            print ("[ - ] Zero-byte Prefetch file")
+
+ 
 if __name__ == '__main__':
     main()
