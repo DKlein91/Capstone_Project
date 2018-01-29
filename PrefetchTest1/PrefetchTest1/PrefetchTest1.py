@@ -259,7 +259,7 @@ class Prefetch(object):
         # Prints important Prefetch data in a structured format
         banner = "=" * (len(ntpath.basename(self.pFileName)) + 2)
         print ("\n{0}\n{1}\n{0}\n".format(banner, ntpath.basename(self.pFileName)))
-        print ("Executable Name: {}\n".format(self.executableName))
+        print ("Executable Name: {}\n".format(self.executableName.decode('UTF-8')))
         print ("Run count: {}".format(self.runCount))
 
         if len(self.timestamps) > 1:
@@ -270,8 +270,9 @@ class Prefetch(object):
             print ("Last Executed: {}".format(self.timestamps[0]))
         
         print ("\nVolume Information:")
+
         for i in self.volumesInformationArray:
-            print ("    Volume Name: " + str(i["Volume Name"]))
+            print ("    Volume Name: " + i["Volume Name"].decode('UTF-8'))
             print ("    Creation Date: " + str(i["Creation Date"]))
             print ("    Serial Number: " + str(i["Serial Number"]))
             print ("")
@@ -279,7 +280,7 @@ class Prefetch(object):
         print ("Directory Strings:")
         for volume in self.directoryStringsArray:
             for i in volume:
-                print ("    " + str(i))
+                print ("    " + i.decode('UTF-8'))
         print ("")
 
         print ("Resources loaded:\n")
@@ -287,13 +288,13 @@ class Prefetch(object):
         for i in self.resources:
             if i:
                 if count > 999:
-                    print ("{}: {}".format(count, i))
+                    print ("{}: {}".format(count, i.decode('UTF-8')))
                 if count > 99:
-                    print ("{}:  {}".format(count, i))                          
+                    print ("{}:  {}".format(count, i.decode('UTF-8')))                          
                 elif count > 9:
-                    print ("{}:   {}".format(count, i))
+                    print ("{}:   {}".format(count, i.decode('UTF-8')))
                 else:
-                    print ("{}:    {}".format(count, i))
+                    print ("{}:    {}".format(count, i.decode('UTF-8')))
             count += 1
 
         print ("")
@@ -396,6 +397,40 @@ class DecompressWin10(object):
 
         return bytearray(ntDecompressed)
 
+def sortTimestamps(directory):
+    timestamps = []
+
+    for i in os.listdir(directory):
+        if i.endswith(".pf"):
+            if os.path.getsize(directory + i) > 0:
+                try:
+                    p = Prefetch(directory + i)
+                except Exception as e:
+                    print ("[ - ] {} could not be parsed".format(i))
+                    continue
+            else:
+                continue
+            
+            start = 0
+            end = 8
+            while end <= len(p.lastRunTime):
+                tstamp = struct.unpack_from("Q", p.lastRunTime[start:end])[0]
+
+                if tstamp:
+                    timestamps.append((tstamp, i[:-3]))
+                    start += 8
+                    end += 8
+                else:
+                    break
+    
+    return sorted(timestamps, key=lambda tup: tup[0], reverse=True)
+
+def convertTimestamp(timestamp):
+        # Timestamp is a Win32 FILETIME value
+        # This function returns that value in a human-readable format
+        return str(datetime(1601,1,1) + timedelta(microseconds=timestamp / 10.))
+
+
 def main():
     p = ArgumentParser()
     p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
@@ -421,23 +456,23 @@ def main():
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
         if os.path.isdir(args.directory):
-            if args.csv:
-                print ("Last Executed, MFT Seq Number, MFT Record Number, Executable Name, Run Count")
+#            if args.csv:
+#                print ("Last Executed, MFT Seq Number, MFT Record Number, Executable Name, Run Count")
+#
+#                for i in os.listdir(args.directory):
+#                    if i.endswith(".pf"):
+#                        if os.path.getsize(args.directory + i) > 0:
+#                            try:
+#                                p = Prefetch(args.directory + i)
+#                            except Exception as e:
+#                                print ("[ - ] {} could not be parsed".format(i))
+#                            print ("{},{},{},{},{}".format(p.timestamps[0], p.mftSeqNumber, p.mftRecordNumber, p.executableName, p.runCount))
+#                        else:
+#                            print ("[ - ] {}: Zero-byte Prefetch File".format(i))
+#                    else:
+#                        continue
 
-                for i in os.listdir(args.directory):
-                    if i.endswith(".pf"):
-                        if os.path.getsize(args.directory + i) > 0:
-                            try:
-                                p = Prefetch(args.directory + i)
-                            except Exception as e:
-                                print ("[ - ] {} could not be parsed".format(i))
-                            print ("{},{},{},{},{}".format(p.timestamps[0], p.mftSeqNumber, p.mftRecordNumber, p.executableName, p.runCount))
-                        else:
-                            print ("[ - ] {}: Zero-byte Prefetch File".format(i))
-                    else:
-                        continue
-
-            else:
+#            else:
                 for i in os.listdir(args.directory):
                     if i.endswith(".pf"):
                         if os.path.getsize(args.directory + i):
@@ -448,7 +483,13 @@ def main():
                                 print ("[ - ] {} could not be parsed".format(i))
                         else:
                             print ("[ - ] Zero-byte Prefetch file")
+    elif args.executed:
+        if not (args.executed.endswith("/") or args.executed.endswith("\\")):
+            sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
+        print ("Execution Time, File Executed")
+        for i in  sortTimestamps(args.executed):
+            print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
 if __name__ == '__main__':
     main()
