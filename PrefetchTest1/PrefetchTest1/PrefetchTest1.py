@@ -15,9 +15,6 @@ class Prefetch(object):
         self.pFileName = infile
 
         with open(infile, "rb") as f:
-            if f.read(3) == "MAM":
-                f.close()
-
                 d = DecompressWin10()
                 decompressed = d.decompress(infile)
 
@@ -62,16 +59,14 @@ class Prefetch(object):
         # Parse the file header
         # 84 bytes
         self.version = struct.unpack_from("I", infile.read(4))[0]
-        print(self.version)
         self.signature = struct.unpack_from("I", infile.read(4))[0]
         unknown0 = struct.unpack_from("I", infile.read(4))[0]
         self.fileSize = struct.unpack_from("I", infile.read(4))[0]
         executableName = struct.unpack_from("60s", infile.read(60))[0]
-        executableName = executableName.split(b"\\x00\\x00")[0]
-        self.executableName = executableName.replace(b"\\x00", b"")
+        executableName = executableName.split(b"\x00\x00")[0]
+        self.executableName = executableName.replace(b"\x00", b"")
         rawhash = hex(struct.unpack_from("I", infile.read(4))[0])
         self.hash = rawhash.lstrip("0x")
-
         unknown1 = infile.read(4)
     
     def fileInformation23(self, infile):
@@ -276,15 +271,15 @@ class Prefetch(object):
         
         print ("\nVolume Information:")
         for i in self.volumesInformationArray:
-            print ("    Volume Name: " + i)
-            print ("    Creation Date: " + i)
-            print ("    Serial Number: " + i)
+            print ("    Volume Name: " + str(i["Volume Name"]))
+            print ("    Creation Date: " + str(i["Creation Date"]))
+            print ("    Serial Number: " + str(i["Serial Number"]))
             print ("")
 
         print ("Directory Strings:")
         for volume in self.directoryStringsArray:
             for i in volume:
-                print ("    " + i)
+                print ("    " + str(i))
         print ("")
 
         print ("Resources loaded:\n")
@@ -401,14 +396,6 @@ class DecompressWin10(object):
 
         return bytearray(ntDecompressed)
 
-
-
-
-
-
-
-
-
 def main():
     p = ArgumentParser()
     p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
@@ -424,12 +411,8 @@ def main():
                 except Exception as e:
                     print ("[ - ] {}".format(e))
                     sys.exit("[ - ] {} could not be parsed".format(args.file))
-                
-                if args.csv:
-                    print ("Last Executed, Executable Name, Run Count")
-                    print ("{}, {}-{}, {}".format(p.timestamps[0], p.executableName, p.hash, p.runCount))
-                else:
-                    p.prettyPrint()
+
+                p.prettyPrint()
             else:
                 print ("[ - ] {}: Zero byte Prefetch file".format(args.file))
 
