@@ -727,22 +727,3 @@ if __name__ == "__main__":
         
     elif action1 in ['-C', '-c', 'custom']:
         usage_and_exit()
-      
-             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

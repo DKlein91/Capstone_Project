@@ -1,3 +1,23 @@
+###############################
+#
+#Name:      PrefetchTest1.py 
+#Version:   1.0
+#Date:      January 29, 2018
+#Author(s): Joe Blanco, David Klein, Jessica Camilien, Justice Collier
+#
+#Functions(s):
+#           Parse a single Prefetch File, showing the following information: Executable name, Last Execution Time, Volume Name(s), Creation Date(s), Serial Number(s), Directory String(s), and Resources Used.
+#           Parse a single directory's Prefetch Files, showing the same information as is enumerated above.
+#           Show Last Execution Times of all Prefetch Files, sorted from most recent to least recent.
+#
+#Source(s): 
+#           PoorBillionaire's Windows-Prefetch-Parser: https://github.com/PoorBillionaire/Windows-Prefetch-Parser
+#           StackOverflow, support for Python syntax and differences between Python 2 & 3
+#           The Forensics Wiki, article on Prefetch Files: http://www.forensicswiki.org/wiki/Prefetch
+#           
+#
+################################
+
 from argparse import ArgumentParser
 import binascii
 import ctypes
