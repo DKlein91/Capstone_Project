@@ -1,5 +1,5 @@
 
-#import olefile
+import olefile
 import os
 import sys
 import uuid, struct, datetime, argparse, time
