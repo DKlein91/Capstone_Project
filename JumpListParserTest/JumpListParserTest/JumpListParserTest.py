@@ -162,7 +162,6 @@ def lnk_file_header(header_data):
     lnk_header_flags = struct.unpack("<I", header_data[20:24])
     lnk_header_flags_bits = BitArray(hex(lnk_header_flags[0]))
     
-    
     # These two lines will parse out the individual bits for the file attributes
     lnk_header_file_attrib = struct.unpack("<I", header_data[24:28])
     lnk_header_file_attrib_bits = BitArray(hex(lnk_header_file_attrib[0]))
@@ -548,12 +547,13 @@ def destlist_data(destlist_file_data):
                      'Birth (MAC)':birth_mac,'Data':Data})
    
     for entry in range(destlist_totalentries[0]-1):
-        
         if destlist_entryidnumber[0] > 1:
             
             destlist_entry_volumeid = destlist_file_data[offset+8:offset+24] # New volume ID
             destlist_volume_identifier = uuid.UUID(bytes_le=destlist_entry_volumeid)
             print("New Volume ID: {}".format(destlist_volume_identifier))
+
+            print("============================")
 
             destlist_entry_objectid = destlist_file_data[offset+24:offset+40] # New Object ID
             destlist_object_identifier = uuid.UUID(bytes_le=destlist_entry_objectid)

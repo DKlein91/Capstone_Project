@@ -12,7 +12,7 @@
     <Name>JumpListParserTest</Name>
     <RootNamespace>JumpListParserTest</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-a -i C:\Users\JHBlancs\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations\4cb9c5750d51c07f.automaticDestinations-ms</CommandLineArguments>
+    <CommandLineArguments>-a -i C:\Users\jhbla\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations\5f7b5f1e01b83767.automaticDestinations-ms</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
