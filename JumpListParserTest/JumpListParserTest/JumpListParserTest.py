@@ -557,7 +557,7 @@ def destlist_data(destlist_file_data):
 
             destlist_entry_objectid = destlist_file_data[offset+24:offset+40] # New Object ID
             destlist_object_identifier = uuid.UUID(bytes_le=destlist_entry_objectid)
-            print("New Object ID: {}".format(destlist_object_identifier))
+            #print("New Object ID: {}".format(destlist_object_identifier))
 
             # This prints the Object ID (Timestamp)
             # reads in little endian form first 2 byte(higher order time) next 2 bytes (middle order time)
@@ -565,25 +565,25 @@ def destlist_data(destlist_file_data):
             destlist_entry_object_timestamp = struct.unpack("<Q", destlist_file_data[offset+24:offset+32])
             destlist_entry_object_timestamp_value = convert_hex(hex(destlist_entry_object_timestamp[0]))
             destlist_entry_object_timestamp = FromFiletime(destlist_entry_object_timestamp_value -5748192000000000)
-            print("New Object ID (Timestamp): {}".format(destlist_entry_object_timestamp))
+            #print("New Object ID (Timestamp): {}".format(destlist_entry_object_timestamp))
 
             # This prints the Object ID (Sequence number )
             destlist_entry_object_sequence = struct.unpack(">H", destlist_file_data[offset+32:offset+34])
-            print("New ObjectID (Seq. No): {}".format(destlist_entry_object_sequence[0]))
+            #print("New ObjectID (Seq. No): {}".format(destlist_entry_object_sequence[0]))
 
             # This prints the MAC address of the primary newtork card in the computer system
             destlist_entry_object_mac1 = struct.unpack(">L", destlist_file_data[offset+34:offset+38])
             destlist_entry_object_mac2 = struct.unpack(">H", destlist_file_data[offset+38:offset+40])
-            print("New ObjectID (MAC): {}".format(convert_mac(hex(destlist_entry_object_mac1[0])+hex(destlist_entry_object_mac2[0]))))
+            #print("New ObjectID (MAC): {}".format(convert_mac(hex(destlist_entry_object_mac1[0])+hex(destlist_entry_object_mac2[0]))))
             destlist_entry_object_mac = convert_mac(hex(destlist_entry_object_mac1[0])+hex(destlist_entry_object_mac2[0]))
             
             destlist_entry_volumeid = destlist_file_data[offset+40:offset+56] # Birth volume ID
             destlist_volume_identifier = uuid.UUID(bytes_le=destlist_entry_volumeid)
-            print("Birth Volume ID: {}".format(destlist_volume_identifier))
+            #print("Birth Volume ID: {}".format(destlist_volume_identifier))
 
             destlist_entry_objectid = destlist_file_data[offset+56:offset+72] #Birth Object ID
             destlist_object_identifier = uuid.UUID(bytes_le=destlist_entry_objectid)
-            print("Birth Object ID: {}".format(destlist_object_identifier))
+            #print("Birth Object ID: {}".format(destlist_object_identifier))
 
             # This prints the Object ID (Timestamp)
             # reads in little endian form first 2 byte(higher order time) next 2 bytes (middle order time)
@@ -591,12 +591,12 @@ def destlist_data(destlist_file_data):
             birth_destlist_entry_object_timestamp = struct.unpack("<Q", destlist_file_data[offset+56:offset+64])
             birth_destlist_entry_object_timestamp_value = convert_hex(hex(birth_destlist_entry_object_timestamp[0]))
             birth_destlist_entry_object_timestamp = FromFiletime(birth_destlist_entry_object_timestamp_value -5748192000000000)
-            print("Birth Object ID (Timestamp): {}".format(birth_destlist_entry_object_timestamp))
+            #print("Birth Object ID (Timestamp): {}".format(birth_destlist_entry_object_timestamp))
             
 
             # This prints the Object ID (Sequence number )
             birth_destlist_entry_object_sequence = struct.unpack(">H", destlist_file_data[offset+64:offset+66])
-            print("Birth ObjectID (Seq. No): {}".format(birth_destlist_entry_object_sequence[0]))
+            #print("Birth ObjectID (Seq. No): {}".format(birth_destlist_entry_object_sequence[0]))
 
             # This prints the MAC address of the primary newtork card in the computer system
             birth_destlist_entry_object_mac1 = struct.unpack(">L", destlist_file_data[offset+66:offset+70])
@@ -609,7 +609,7 @@ def destlist_data(destlist_file_data):
             destlist_entry_netbiosname = destlist_netbiosname.decode('ascii')
 
             destlist_entryidnumber = struct.unpack("<L",destlist_file_data[offset+88:offset+92]) # Entry ID number
-            print("Entry ID number: ",destlist_entryidnumber[0])
+            #print("Entry ID number: ",destlist_entryidnumber[0])
 
             destlist_some_test1 = struct.unpack("<Q",destlist_file_data[offset+92:offset+100]) # some test
             #print("Some Test: ",destlist_some_test1[0])
@@ -617,7 +617,7 @@ def destlist_data(destlist_file_data):
             # Parse the last recorded access time stamp
             destlist_entry_last_access_time = struct.unpack("<Q", destlist_file_data[offset+100:offset+108])
             lnk_header_access_time = FromFiletime(destlist_entry_last_access_time[0])
-            print("Last recorded Access Time of Entry: {}".format(lnk_header_access_time))
+            #print("Last recorded Access Time of Entry: {}".format(lnk_header_access_time))
             
             destlist_entrypin_status = struct.unpack("<L",destlist_file_data[offset+108:offset+112]) # Entry Pin status
             #print(destlist_entrypin_status[0])
