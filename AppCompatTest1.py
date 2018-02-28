@@ -75,18 +75,12 @@ DATE_ISO = "%Y-%m-%d %H:%M:%S"
 g_timeformat = DATE_ISO
 
 
-# Convert FILETIME to datetime.
-# Based on http://code.activestate.com/recipes/511425-filetime-to-datetime/
-def convert_filetime(dwLowDateTime, dwHighDateTime):
+def even_checker(item):
+    if item % 2 == 1:
+        return item + 1
+    else:
+        return item
 
-    try:
-        date = datetime.datetime(1601, 1, 1, 0, 0, 0)
-        temp_time = dwHighDateTime
-        temp_time <<= 32
-        temp_time |= dwLowDateTime
-        return date + datetime.timedelta(microseconds=temp_time/10)
-    except OverflowError as err:
-        return None
 
 def filetime_to_dt(ft):
     """Converts a Microsoft filetime number to a Python datetime. The new
@@ -97,17 +91,13 @@ def filetime_to_dt(ft):
 
     >>> filetime_to_dt(128930364000)
     datetime.datetime(2009, 7, 25, 23, 0)
-                      188000000000200000
+                      
     >>> filetime_to_dt(128930364000001000)
     datetime.datetime(2009, 7, 25, 23, 0, 0, 100)
     """
     # Get seconds and remainder in terms of Unix epoch
-    (s, ns100) = divmod(ft - 116444736000000000, 10000000)
     # Convert to datetime object
-    dt = datetime.datetime.utcfromtimestamp(s)
-    # Add remainder in as microseconds. Python 3.2 requires an integer
-    dt = dt.replace(microsecond=(ns100 // 10))
-    return dt
+    return datetime.datetime.utcfromtimestamp((ft - 116444736000000000) / 10000000)
 
 # Return a unique list while preserving ordering.
 def unique_list(li):
@@ -347,53 +337,66 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
     #print((binascii.hexlify(cache_data))) #HEXLIFY A BYTES STRING?
     b_data = binascii.hexlify(cache_data)
     test_num = (hex(entry_meta_len))
+    next_cache = 0
    # data = sio.StringIO(cache_data.decode('utf-8', 'replace'))
     while b_data.find(b'31307473') != -1:
-        #print(data.read(88))
-        b_header=b_data[:entry_meta_len*2]
-        print(b_header)
-        #header = data.read(entry_meta_len)
+        print(next_cache)
+        #Set up the next cache entry's location; set up the current entry's cache, which will be independently manipulated.
+        next_cache = b_data[8:].find(b'31307473')
+        cache_data = b_data[:next_cache+8]
 
+        #Create the header of 12 bytes, which houses the signature and entry size
+        b_header=b_data[:entry_meta_len*2]
 
         # Read in the entry metadata
-        # Note: the crc32 hash is of the cache entry data
+        # Note: the crc32 hash is of the cache entry data - usused here
         magic = binascii.unhexlify(b_header[:8]).decode('utf-8', 'ignore')
         crc32_hash = b_header[9:15]
-        entry_len = int(b_header[24:15:-1], 16)
+        print(b_header[24:15:-1])
+        entry_len = b''
+        for x in range(12,7,-1):
+            entry_len += b_header[x*2:(x*2)+2]
+
+        entry_len =  int(entry_len, 16)
 
         # Check the magic tag
         if magic != ver_magic:
             raise Exception("Invalid version magic tag found: 0x%x" % struct.unpack("<L", magic)[0])
-        b_entry_data = b_data[entry_meta_len*2: entry_len]
-        #print(b_entry_data)
+        b_entry_data = cache_data[entry_meta_len*2: even_checker(entry_len)+16]
 
         # Read the path length
         path_len = int(b_entry_data[:2], 16)
         if path_len == 0:
             path = 'None'
         else:
-            path = binascii.unhexlify(b_entry_data[2:(path_len+2)*2]).decode('utf-8', 'ignore')
+            path = binascii.unhexlify(b_entry_data[2:(path_len+2)*2]).decode('utf-8', 'stric')
 
+        print(path)
         b_entry_data = b_entry_data[(path_len+2)*2:]
-        print(b_entry_data)
         # Read the remaining entry data
-        b_datetime = b_entry_data[1:17]
-        low_datetime = int(b_entry_data[:8], 16)
-        high_datetime = int(b_entry_data[8:16], 16)
-        print(filetime_to_dt(3934899969))
-        last_mod_date = convert_filetime(low_datetime, high_datetime)
+        b_datetime = b_entry_data[0:16]
+        date_array = (b_datetime).decode('utf-8')
+        filetime = ""
+        for x in range(8,-1,-1):
+            filetime += (date_array[x*2:x*2+2])
+
+        print(filetime)
+        #last_mod_date = convert_filetime(low_datetime, high_datetime)
         try:
-            last_mod_date = last_mod_date.strftime(g_timeformat)
+            temp_datetime = int(filetime, 16)
+            test_datething = filetime_to_dt(temp_datetime)
+            last_mod_date = test_datething.strftime(g_timeformat)
         except ValueError:
             last_mod_date = bad_entry_data
 
         # Skip the unrecognized Microsoft App entry format for now
-        if last_mod_date == bad_entry_data:
-            continue
+        #if last_mod_date == bad_entry_data:
+            #continue
 
         row = [last_mod_date, 'N/A', path, 'N/A', 'N/A']
         entry_list.append(row)
-
+        b_data = b_data[8:]
+        b_data = b_data[next_cache:]
     return entry_list
 
 # Read the Shim Cache Windows 7/2k8-R2 entry format,
