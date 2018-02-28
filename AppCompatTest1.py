@@ -97,8 +97,11 @@ def filetime_to_dt(ft):
     """
     # Get seconds and remainder in terms of Unix epoch
     # Convert to datetime object
-    return datetime.datetime.utcfromtimestamp((ft - 116444736000000000) / 10000000)
-
+    
+    try: 
+        return datetime.datetime.utcfromtimestamp((ft - 116444736000000000) / 10000000)
+    except ValueError:
+        return 0
 # Return a unique list while preserving ordering.
 def unique_list(li):
 
@@ -372,7 +375,7 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
             path = binascii.unhexlify(b_entry_data[2:(path_len+2)*2]).decode('utf-8', 'stric')
 
         print(path)
-        b_entry_data = b_entry_data[(path_len+2)*2:]
+        b_entry_data = cache_data[(entry_meta_len*2) + (path_len+2)*2:]
         # Read the remaining entry data
         b_datetime = b_entry_data[0:16]
         date_array = (b_datetime).decode('utf-8')
@@ -380,7 +383,6 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
         for x in range(8,-1,-1):
             filetime += (date_array[x*2:x*2+2])
 
-        print(filetime)
         #last_mod_date = convert_filetime(low_datetime, high_datetime)
         try:
             temp_datetime = int(filetime, 16)
@@ -389,10 +391,7 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
         except ValueError:
             last_mod_date = bad_entry_data
 
-        # Skip the unrecognized Microsoft App entry format for now
-        #if last_mod_date == bad_entry_data:
-            #continue
-
+        print(last_mod_date)
         row = [last_mod_date, 'N/A', path, 'N/A', 'N/A']
         entry_list.append(row)
         b_data = b_data[8:]
