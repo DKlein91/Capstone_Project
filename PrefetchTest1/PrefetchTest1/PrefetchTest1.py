@@ -275,12 +275,25 @@ class Prefetch(object):
         
         return int(byteString, 16)
 
+    def csvPrintSingleFile(self):
+        fileName = self.pFileName, '.csv'
+        csvsinglefile=open(fileName, 'rw')
+        csvindexfile=open("Index_Prefetch.csv")
+        fieldNamesIndex = ['Executable Name', 'Last Executed', 'Run Count']
+        #fieldNamesSingle = ['Executable Name', 'Run Count', 'Volume Information', 'Directory Strings', 'Resources Loaded']
+        prf_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        prf.writeHeader()
+        prf.writeRow({'Executable Name':executableName, 'Last Executed':lastRunTime, 
+                      'Run Count':runCount})
+
     def prettyPrint(self):
         # Prints important Prefetch data in a structured format
         banner = "=" * (len(ntpath.basename(self.pFileName)) + 2)
         print ("\n{0}\n{1}\n{0}\n".format(banner, ntpath.basename(self.pFileName)))
         print ("Executable Name: {}\n".format(self.executableName.decode('UTF-8')))
         print ("Run count: {}".format(self.runCount))
+
+
 
         if len(self.timestamps) > 1:
             print ("Last Executed:")
@@ -476,33 +489,16 @@ def main():
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
         if os.path.isdir(args.directory):
-#            if args.csv:
-#                print ("Last Executed, MFT Seq Number, MFT Record Number, Executable Name, Run Count")
-#
-#                for i in os.listdir(args.directory):
-#                    if i.endswith(".pf"):
-#                        if os.path.getsize(args.directory + i) > 0:
-#                            try:
-#                                p = Prefetch(args.directory + i)
-#                            except Exception as e:
-#                                print ("[ - ] {} could not be parsed".format(i))
-#                            print ("{},{},{},{},{}".format(p.timestamps[0], p.mftSeqNumber, p.mftRecordNumber, p.executableName, p.runCount))
-#                        else:
-#                            print ("[ - ] {}: Zero-byte Prefetch File".format(i))
-#                    else:
-#                        continue
-
-#            else:
-                for i in os.listdir(args.directory):
-                    if i.endswith(".pf"):
-                        if os.path.getsize(args.directory + i):
-                            try:
-                                p = Prefetch(args.directory + i)
-                                p.prettyPrint()
-                            except Exception as e:
-                                print ("[ - ] {} could not be parsed".format(i))
-                        else:
-                            print ("[ - ] Zero-byte Prefetch file")
+            for i in os.listdir(args.directory):
+                if i.endswith(".pf"):
+                    if os.path.getsize(args.directory + i):
+                        try:
+                            p = Prefetch(args.directory + i)
+                            p.prettyPrint()
+                        except Exception as e:
+                            print ("[ - ] {} could not be parsed".format(i))
+                    else:
+                        print ("[ - ] Zero-byte Prefetch file")
     elif args.executed:
         if not (args.executed.endswith("/") or args.executed.endswith("\\")):
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
