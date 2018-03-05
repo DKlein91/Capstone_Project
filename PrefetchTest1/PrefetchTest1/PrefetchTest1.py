@@ -28,6 +28,7 @@ import struct
 import sys
 import tempfile
 import math
+import csv
 
 
 class Prefetch(object):
@@ -276,8 +277,8 @@ class Prefetch(object):
         return int(byteString, 16)
 
     def csvPrintSingleFile(self):
-        fileName = self.pFileName, '.csv'
-        csvsinglefile=open(fileName, 'rw')
+        csvfile = str(self.executableName[:-4]) + '.csv'
+        csvsinglefile=open(fileName, 'w')
         csvindexfile=open("Index_Prefetch.csv")
         fieldNamesIndex = ['Executable Name', 'Last Executed', 'Run Count']
         #fieldNamesSingle = ['Executable Name', 'Run Count', 'Volume Information', 'Directory Strings', 'Resources Loaded']
@@ -469,6 +470,7 @@ def main():
     p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
     p.add_argument("-e", "--executed", help="Sort PF files by ALL execution times")
     p.add_argument("-f", "--file", help="Parse a given Prefetch file")
+    p.add_argument("-c", "--csv", help="Parse all Prefetch files and output to a csv file in the directory")
     args = p.parse_args()
 
     if args.file:
@@ -494,6 +496,7 @@ def main():
                     if os.path.getsize(args.directory + i):
                         try:
                             p = Prefetch(args.directory + i)
+                           # p.csvPrintSingleFile()
                             p.prettyPrint()
                         except Exception as e:
                             print ("[ - ] {} could not be parsed".format(i))
@@ -502,9 +505,13 @@ def main():
     elif args.executed:
         if not (args.executed.endswith("/") or args.executed.endswith("\\")):
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
-
+        csvfile = open('indexPrefetch.csv', 'w')
+        fieldNamesIndex = ['Executable Name', 'Last Executed']
+        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        lnk_writer.writeheader()
         print ("Execution Time, File Executed")
         for i in  sortTimestamps(args.executed):
+            lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':convertTimestamp(i[0])})
             print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
 if __name__ == '__main__':

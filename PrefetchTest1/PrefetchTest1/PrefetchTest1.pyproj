@@ -12,7 +12,7 @@
     <Name>PrefetchTest1</Name>
     <RootNamespace>PrefetchTest1</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-d "C:\Windows\Prefetch\\"</CommandLineArguments>
+    <CommandLineArguments>-e "C:\Windows\Prefetch\\"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
