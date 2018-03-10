@@ -28,6 +28,7 @@ import struct
 import sys
 import tempfile
 import math
+import csv
 
 
 class Prefetch(object):
@@ -275,12 +276,25 @@ class Prefetch(object):
         
         return int(byteString, 16)
 
+    def csvPrintSingleFile(self):
+        csvfile = str(self.executableName[:-4]) + '.csv'
+        csvsinglefile=open(fileName, 'w')
+        csvindexfile=open("Index_Prefetch.csv")
+        fieldNamesIndex = ['Executable Name', 'Last Executed', 'Run Count']
+        #fieldNamesSingle = ['Executable Name', 'Run Count', 'Volume Information', 'Directory Strings', 'Resources Loaded']
+        prf_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        prf.writeHeader()
+        prf.writeRow({'Executable Name':executableName, 'Last Executed':lastRunTime, 
+                      'Run Count':runCount})
+
     def prettyPrint(self):
         # Prints important Prefetch data in a structured format
         banner = "=" * (len(ntpath.basename(self.pFileName)) + 2)
         print ("\n{0}\n{1}\n{0}\n".format(banner, ntpath.basename(self.pFileName)))
         print ("Executable Name: {}\n".format(self.executableName.decode('UTF-8')))
         print ("Run count: {}".format(self.runCount))
+
+
 
         if len(self.timestamps) > 1:
             print ("Last Executed:")
@@ -456,6 +470,7 @@ def main():
     p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
     p.add_argument("-e", "--executed", help="Sort PF files by ALL execution times")
     p.add_argument("-f", "--file", help="Parse a given Prefetch file")
+    p.add_argument("-c", "--csv", help="Parse all Prefetch files and output to a csv file in the directory")
     args = p.parse_args()
 
     if args.file:
@@ -476,39 +491,27 @@ def main():
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
         if os.path.isdir(args.directory):
-#            if args.csv:
-#                print ("Last Executed, MFT Seq Number, MFT Record Number, Executable Name, Run Count")
-#
-#                for i in os.listdir(args.directory):
-#                    if i.endswith(".pf"):
-#                        if os.path.getsize(args.directory + i) > 0:
-#                            try:
-#                                p = Prefetch(args.directory + i)
-#                            except Exception as e:
-#                                print ("[ - ] {} could not be parsed".format(i))
-#                            print ("{},{},{},{},{}".format(p.timestamps[0], p.mftSeqNumber, p.mftRecordNumber, p.executableName, p.runCount))
-#                        else:
-#                            print ("[ - ] {}: Zero-byte Prefetch File".format(i))
-#                    else:
-#                        continue
-
-#            else:
-                for i in os.listdir(args.directory):
-                    if i.endswith(".pf"):
-                        if os.path.getsize(args.directory + i):
-                            try:
-                                p = Prefetch(args.directory + i)
-                                p.prettyPrint()
-                            except Exception as e:
-                                print ("[ - ] {} could not be parsed".format(i))
-                        else:
-                            print ("[ - ] Zero-byte Prefetch file")
+            for i in os.listdir(args.directory):
+                if i.endswith(".pf"):
+                    if os.path.getsize(args.directory + i):
+                        try:
+                            p = Prefetch(args.directory + i)
+                           # p.csvPrintSingleFile()
+                            p.prettyPrint()
+                        except Exception as e:
+                            print ("[ - ] {} could not be parsed".format(i))
+                    else:
+                        print ("[ - ] Zero-byte Prefetch file")
     elif args.executed:
         if not (args.executed.endswith("/") or args.executed.endswith("\\")):
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
-
+        csvfile = open('indexPrefetch.csv', 'w')
+        fieldNamesIndex = ['Executable Name', 'Last Executed']
+        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        lnk_writer.writeheader()
         print ("Execution Time, File Executed")
         for i in  sortTimestamps(args.executed):
+            lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':convertTimestamp(i[0])})
             print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
 if __name__ == '__main__':
