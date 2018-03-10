@@ -6,6 +6,7 @@ import binascii
 import struct
 import datetime
 import csv
+import argparse
 
 def parseTrash(fileName, sizeOfFile, isWin10):
     fileSize = fileName.read(8)
@@ -67,14 +68,31 @@ def convertDateTime(offset):
 def main():
     print("\nWelcome to the Windows Trash Inspector for Windows 8 and 10!")
     print()
+
+    parser = argparse.ArgumentParser(description='Input and output')
+    parser.add_argument('-i', '--input', metavar='[iP]', type=str, nargs=1, help='A string containing the file or directory to parse. Default is C:\\$Recycle.Bin\\')
+    parser.add_argument('-o', '--output', metavar='[oP]', type=str, nargs=1, help='A string containing the location to place the CSV file. Default is the folder containing this script.')
     
-    filename = open("trashData.csv", "w", newline='')
+    args = parser.parse_args()
+    
+    try:
+        dirName = args.input[0]
+    except:
+        dirName = "C:\\$Recycle.Bin\\"
+
+    try:
+        outputFile = os.path.join(args.output[0], "trashData.csv")
+    except:
+        outputFile = "trashData.csv"
+
+    filename = open(outputFile, "w", newline='')
     writer = csv.writer(filename, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Name", "Path", "Size", "Deleted"])
 
-    dirName = "C:\\$Recycle.Bin\\"
-
     unopenedFiles = 0
+    
+    print("Inspecting Directory: " + dirName)
+    print("Output File Location: " + outputFile + "\n")
 
     if os.path.isfile(dirName):
         openThisFile = open(dirName,"rb")
