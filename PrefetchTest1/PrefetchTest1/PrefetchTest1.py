@@ -280,7 +280,6 @@ class Prefetch(object):
         csvfile = str(self.executableName[:-4]) + '.csv'
         csvsinglefile=open(fileName, 'w')
         csvindexfile=open("Index_Prefetch.csv")
-        fieldNamesIndex = ['Executable Name', 'Last Executed', 'Run Count']
         #fieldNamesSingle = ['Executable Name', 'Run Count', 'Volume Information', 'Directory Strings', 'Resources Loaded']
         prf_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
         prf.writeHeader()
@@ -507,12 +506,40 @@ def main():
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
         csvfile = open('indexPrefetch.csv', 'w')
         fieldNamesIndex = ['Executable Name', 'Last Executed']
+        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
         lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
         lnk_writer.writeheader()
         print ("Execution Time, File Executed")
         for i in  sortTimestamps(args.executed):
-            lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':convertTimestamp(i[0])})
+            singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
+            single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
+            single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
+            lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
             print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
+    elif args.csv:
+        csvfile = open('indexPrefetch.csv', 'w')
+        fieldNamesIndex = ['Executable Name', 'Last Executed']
+        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
+        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        lnk_writer.writeheader()
+        if os.path.isdir(args.executed):
+            for i in os.listdir(args.executed):
+                if i.endswith(".pf"):
+                    if os.path.getsize(args.executed + i):
+                        try:
+                            p = Prefetch(args.executed + i)
+                           # p.csvPrintSingleFile()
+                            p.prettyPrint()
+                        except Exception as e:
+                            print ("[ - ] {} could not be parsed".format(i))
+                    else:
+                        print ("[ - ] Zero-byte Prefetch file")
+        for i in  sortTimestamps(args.executed):
+            singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
+            single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
+            single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
+            lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
+            
 if __name__ == '__main__':
     main()
