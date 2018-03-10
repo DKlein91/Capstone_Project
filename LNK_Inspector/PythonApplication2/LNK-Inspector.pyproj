@@ -13,7 +13,8 @@
     <Name>LNK-Inspector</Name>
     <RootNamespace>PythonApplication2</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>"C:\Users\dmk16\AppData\Roaming\Microsoft\Windows\Recent\"</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

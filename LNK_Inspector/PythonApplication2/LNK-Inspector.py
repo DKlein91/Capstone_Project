@@ -1,8 +1,11 @@
-# This is a port of the Windows LNK file parser by Jacob Cunningham - jakec76@users.sourceforge.net, converted from Python 2.x to Python 3.x
-#   v1.0
-
-import sys, struct, datetime, binascii, re, os, csv
-
+import sys
+import struct
+import datetime
+import binascii
+import re
+import os
+import csv
+import argparse
 
 # HASH of flag attributes
 flag_hash = [["",""] for _ in range(7)]
@@ -191,21 +194,17 @@ def parse_lnk(filename):
         flag_desc.append(flag_hash[cnt][bit])
 
     output += "Link Flags: " + " | ".join(flag_desc) + "\n"
-    csvRow.append(flag_desc)
 
     # File Attributes 4bytes@18h = 24d
     file_attrib = read_unpack_bin(f,24,4)
     attrib_desc = list()
-    attribForCSV = ""
     for cnt in range(0, 14):
         bit = int(file_attrib[cnt])
         # grab the description for this bit
         if bit == 1:
             attrib_desc.append(file_hash[cnt][1])
-            attribForCSV += file_hash[cnt][1]+" - "
     if len(attrib_desc) > 0:
         output += "File Attributes: " + " | ".join(attrib_desc) + "\n"
-    csvRow.append(attribForCSV)
 
 
     # Create time 8bytes @ 1ch = 28
@@ -233,19 +232,16 @@ def parse_lnk(filename):
     icon_index_hex = reverse_hex(read_unpack(f,56,4))
     icon_index = int(icon_index_hex, 16)
     output += "Icon Index: "+str(icon_index) + "\n"
-    csvRow.append(str(icon_index))
 
     # show windows starts @3Ch = 60d 
     show_wnd_hex = reverse_hex(read_unpack(f,60,1))
     show_wnd = int(show_wnd_hex, 16)
     output += "ShowWnd: "+str(show_wnd_hash[show_wnd]) + "\n"
-    csvRow.append(str(show_wnd_hash[show_wnd]))
 
     # hot key starts @40h = 64d 
     hotkey_hex = reverse_hex(read_unpack(f,64,4))
     hotkey = int(hotkey_hex, 16)
     output += "HotKey: "+str(hotkey) + "\n"
-    csvRow.append(str(hotkey))
 
     #------------------------------------------------------------------------
     # End of Flag parsing
@@ -356,6 +352,7 @@ def parse_lnk(filename):
         net_share_name_loc = net_vol_off + net_share_name_loc
         net_share_name = read_null_term(f,net_share_name_loc)
         output += "Network Share Name: "+str(net_share_name) + "\n"
+        csvRow.append(str(net_share_name))
 
         # Mapped Network Drive Info
         net_share_mdrive = net_vol_off + 12
@@ -366,6 +363,7 @@ def parse_lnk(filename):
             net_share_mdrive = net_vol_off + net_share_mdrive
             net_share_mdrive = read_null_term(f,net_share_mdrive)
             output += "Mapped Drive: "+str(net_share_mdrive) + "\n"
+            csvRow.append(str(net_share_mdrive))
 
     else:
         print(output)
@@ -378,7 +376,6 @@ def parse_lnk(filename):
     rem_path_off = struct_start +int(rem_path_off_hex, 16)
     rem_data = read_null_term(f,rem_path_off);
     output += "(App Path:) Remaining Path: "+rem_data + "\n"
-    csvRow.append(rem_data)
 
     #------------------------------------------------------------------------
     # End of FileInfo Structure
@@ -391,37 +388,22 @@ def parse_lnk(filename):
     if flags[2]=="1":
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Description: "+addnl_text + "\n"
-         csvRow.append(addnl_text)
             
     if flags[3]=="1":
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Relative Path: "+addnl_text + "\n"
-         csvRow.append("")
-         csvRow.append(addnl_text)
 
     if flags[4]=="1":
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Working Dir: "+addnl_text + "\n"
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append(addnl_text)
 
     if flags[5]=="1":
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Command Line: "+addnl_text + "\n"
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append(addnl_text)
             
     if flags[6]=="1":
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Icon filename: "+addnl_text + "\n"
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append("")
-         csvRow.append(addnl_text)
 
     print("\n"+output)
     return csvRow
@@ -429,40 +411,56 @@ def parse_lnk(filename):
 
 def usage():
     print("Usage: ./pylnker.py .LNK_FILE")
+
     sys.exit(1)
 
 
 if __name__ == "__main__":
     
-    if len(sys.argv) != 2:
-        usage()
+    parser = argparse.ArgumentParser(description='Input and output')
+    parser.add_argument('-i', '--input', metavar='[iP]', type=str, nargs=1, help='File path to the Users folder. Default is C:\\Users')
+    parser.add_argument('-o', '--output', metavar='[oP]', type=str, nargs=1, help='Path to save the CSV file. Default is the folder containing this script.')
     
+    args = parser.parse_args()
+    
+    try:
+        dirName = args.input[0]
+    except:
+        dirName = "C:\\Users"
+
+    try:
+        outputFile = os.path.join(args.output[0], "LNKData.csv")
+    except:
+        outputFile = "LNKData.csv"
+
+    users = []
+    for name in os.listdir(dirName):
+        if(os.path.exists(os.path.join(dirName, name, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\"))):
+            users.append(name)
+
     out = ""
     unopenedFiles = 0
-    path = str(sys.argv[1])
-    path = path.replace("\\","\\\\")
-    path = path.replace("\"","")
     
-    csvFile = open("LNKData.csv", "w", newline="")
+    csvFile = open(outputFile, "w", newline="")
     writer = csv.writer(csvFile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(["File", "SHELLIDLIST", "POINTER", "DESCRIPTION", "RELATIVE PATH STRING", "WORKING DIRECTORY", "CMD LINE ARGS", "CUSTOM ICON", "Attributes", "Created", "Accessed", "Modified", "Target Length", "Icon Index", "ShowWnd", "HotKey", "Target is on:", "Volume Type", "Volume Serial", "Volume Label", "Base Path", "(App Path) Remaining Path", "Description", "Relative Path", "Working Directory", "Command Line", "Icon Filename", ""])
+    writer.writerow(["File", "Created", "Accessed", "Modified", "Target Size (bytes)", "Target is on:", "Volume Type", "Volume Serial", "Volume Label", "Target File Path", ""])
 
     # parse .lnk file
-    if(os.path.isfile(sys.argv[1])):
-        out = parse_lnk(sys.argv[1])
+    if(os.path.isfile(dirName)):
+        out = parse_lnk(dirName)
         writer.writerow(out)
     else:
-        for dirs, sdirs, files in os.walk(path):
-            for name in files:
-                if(os.path.join(dirs, name)):
-                    try:
-                        out = parse_lnk(os.path.join(dirs, name))
-                        writer.writerow(out)
-                    except:
-                        unopenedFiles += 1
-                        print("Error opening: " + name)
+        for user in users:
+            for dirs, sdirs, files in os.walk(os.path.join(dirName, user, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\")):
+                for name in files:
+                    if(os.path.join(dirs, name)):
+                        try:
+                            out = parse_lnk(os.path.join(dirs, name))
+                            writer.writerow(out)
+                        except:
+                            unopenedFiles += 1
     
-    if(unopenedFiles > 0):
-        print("\n" + str(unopenedFiles) + " files were not opened.")
+#    if(unopenedFiles > 0):
+#        print("\n" + str(unopenedFiles) + " files were not opened.")
     csvFile.close()
 
