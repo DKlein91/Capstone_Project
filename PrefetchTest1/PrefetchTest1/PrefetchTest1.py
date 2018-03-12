@@ -29,6 +29,7 @@ import sys
 import tempfile
 import math
 import csv
+import pathlib
 
 
 class Prefetch(object):
@@ -276,15 +277,25 @@ class Prefetch(object):
         
         return int(byteString, 16)
 
-    def csvPrintSingleFile(self):
-        csvfile = str(self.executableName[:-4]) + '.csv'
-        csvsinglefile=open(fileName, 'w')
-        csvindexfile=open("Index_Prefetch.csv")
-        #fieldNamesSingle = ['Executable Name', 'Run Count', 'Volume Information', 'Directory Strings', 'Resources Loaded']
-        prf_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
-        prf.writeHeader()
-        prf.writeRow({'Executable Name':executableName, 'Last Executed':lastRunTime, 
-                      'Run Count':runCount})
+    def csvPrintSingleFile(self, filepath):
+        csvfilename = filepath + self.executableName[:-4].decode('utf-8', 'ignore') + '.csv'
+        csvSingleRead = open(csvfilename, 'w+')
+        csvSingleRead.close()
+        csvSingleRead = open(csvfilename, 'r+')
+        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Creation Date', 'Volume Name', 'Serial Number']
+        if csvSingleRead.read(30) == '':
+            csvSingleHeader = open(csvfilename, 'w')
+            single_header = csv.DictWriter(csvSingleHeader, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
+            single_header.writeheader()
+            csvSingleHeader.close()
+
+        csvSingleWrite = open(csvfilename, 'a')
+        single_writer = csv.DictWriter(csvSingleWrite, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
+        single_writer.writerow({'Executable Name':self.executableName, 'Last Executed':self.timestamps[0], 
+                      'Run Count':self.runCount, 'Creation Date':convertTimestamp(self.volCreationTime), 
+                      'Volume Name':self.volumesInformationArray[0].get('Volume Name'), 
+                      'Serial Number':str(self.volumesInformationArray[0].get('Serial Number'))})
+        csvSingleWrite.close()
 
     def prettyPrint(self):
         # Prints important Prefetch data in a structured format
@@ -331,6 +342,39 @@ class Prefetch(object):
             count += 1
 
         print ("")
+        
+def sortTimestamps(directory):
+    timestamps = []
+
+    for i in os.listdir(directory):
+        if i.endswith(".pf"):
+            if os.path.getsize(directory + i) > 0:
+                try:
+                    p = Prefetch(directory + i)
+                except Exception as e:
+                    print ("[ - ] {} could not be parsed".format(i))
+                    continue
+            else:
+                continue
+            
+            start = 0
+            end = 8
+            while end <= len(p.lastRunTime):
+                tstamp = struct.unpack_from("Q", p.lastRunTime[start:end])[0]
+
+                if tstamp:
+                    timestamps.append((tstamp, i[:-3]))
+                    start += 8
+                    end += 8
+                else:
+                    break
+    
+    return sorted(timestamps, key=lambda tup: tup[0], reverse=True)
+
+def convertTimestamp(timestamp):
+        # Timestamp is a Win32 FILETIME value
+        # This function returns that value in a human-readable format
+        return str(datetime(1601,1,1) + timedelta(microseconds=timestamp / 10.))
             
 # The code in the class below was taken and then modified from Francesco 
 # Picasso's w10pfdecomp.py script. This modification makes two simple changes:
@@ -430,50 +474,18 @@ class DecompressWin10(object):
 
         return bytearray(ntDecompressed)
 
-def sortTimestamps(directory):
-    timestamps = []
-
-    for i in os.listdir(directory):
-        if i.endswith(".pf"):
-            if os.path.getsize(directory + i) > 0:
-                try:
-                    p = Prefetch(directory + i)
-                except Exception as e:
-                    print ("[ - ] {} could not be parsed".format(i))
-                    continue
-            else:
-                continue
-            
-            start = 0
-            end = 8
-            while end <= len(p.lastRunTime):
-                tstamp = struct.unpack_from("Q", p.lastRunTime[start:end])[0]
-
-                if tstamp:
-                    timestamps.append((tstamp, i[:-3]))
-                    start += 8
-                    end += 8
-                else:
-                    break
-    
-    return sorted(timestamps, key=lambda tup: tup[0], reverse=True)
-
-def convertTimestamp(timestamp):
-        # Timestamp is a Win32 FILETIME value
-        # This function returns that value in a human-readable format
-        return str(datetime(1601,1,1) + timedelta(microseconds=timestamp / 10.))
 
 
 def main():
-    p = ArgumentParser()
+    """p = ArgumentParser()
     p.add_argument("-d", "--directory", help="Parse all PF files in a given directory")
     p.add_argument("-e", "--executed", help="Sort PF files by ALL execution times")
     p.add_argument("-f", "--file", help="Parse a given Prefetch file")
     p.add_argument("-c", "--csv", help="Parse all Prefetch files and output to a csv file in the directory")
-    args = p.parse_args()
-
-    if args.file:
-        if args.file.endswith(".pf"):
+    args = p.parse_args()"""
+    action1 = sys.argv[1]
+    if action1 in ['-f', 'file']:
+        if sys.argv[2].endswith(".pf"):
             if os.path.getsize(args.file) > 0:
                 try:
                     p = Prefetch(args.file)
@@ -485,24 +497,25 @@ def main():
             else:
                 print ("[ - ] {}: Zero byte Prefetch file".format(args.file))
 
-    elif args.directory:
-        if not (args.directory.endswith("/") or args.directory.endswith("\\")):
+    if action1 in ['-d', 'directory']:
+        if not (sys.argv[2].endswith("/") or sys.argv[2].endswith("\\")):
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
-        if os.path.isdir(args.directory):
-            for i in os.listdir(args.directory):
+        directoryPath = sys.argv[2]
+        if os.path.isdir(directoryPath):
+            for i in os.listdir(directoryPath):
                 if i.endswith(".pf"):
-                    if os.path.getsize(args.directory + i):
+                    if os.path.getsize(directoryPath + i):
                         try:
-                            p = Prefetch(args.directory + i)
+                            p = Prefetch(directoryPath + i)
                            # p.csvPrintSingleFile()
                             p.prettyPrint()
                         except Exception as e:
                             print ("[ - ] {} could not be parsed".format(i))
                     else:
                         print ("[ - ] Zero-byte Prefetch file")
-    elif args.executed:
-        if not (args.executed.endswith("/") or args.executed.endswith("\\")):
+    if action1 in ['-e', 'executed']:
+        if not (argv[2].endswith("/") or argv[2].endswith("\\")):
             sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
         csvfile = open('indexPrefetch.csv', 'w')
         fieldNamesIndex = ['Executable Name', 'Last Executed']
@@ -510,36 +523,41 @@ def main():
         lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
         lnk_writer.writeheader()
         print ("Execution Time, File Executed")
-        for i in  sortTimestamps(args.executed):
+        for i in  sortTimestamps(argv[2]):
             singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
             single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
             single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
             lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
             print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
-    elif args.csv:
-        csvfile = open('indexPrefetch.csv', 'w')
-        fieldNamesIndex = ['Executable Name', 'Last Executed']
-        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
-        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
-        lnk_writer.writeheader()
-        if os.path.isdir(args.executed):
-            for i in os.listdir(args.executed):
+    if action1 in ['-c', 'csv']:
+
+        #fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
+        if not os.path.exists(sys.argv[3]):
+            os.makedirs(sys.argv[3])
+        os.chdir(sys.argv[3])
+        print(os.getcwd())
+        prefPath = sys.argv[2]
+        if os.path.isdir(prefPath):
+            for i in os.listdir(prefPath):
                 if i.endswith(".pf"):
-                    if os.path.getsize(args.executed + i):
+                    if os.path.getsize(prefPath + i):
                         try:
-                            p = Prefetch(args.executed + i)
-                           # p.csvPrintSingleFile()
-                            p.prettyPrint()
+                            p = Prefetch(prefPath + i)
+                            p.csvPrintSingleFile(sys.argv[3])
                         except Exception as e:
                             print ("[ - ] {} could not be parsed".format(i))
                     else:
                         print ("[ - ] Zero-byte Prefetch file")
-        for i in  sortTimestamps(args.executed):
-            singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
-            single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
-            single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
-            lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
-            
+
+        csvfile = open('indexPrefetch.csv', 'w')
+        fieldNamesIndex = ['Executable Name', 'Last Executed']
+        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+        lnk_writer.writeheader()
+
+        for i in  sortTimestamps(sys.argv[2]):
+            dt = p.convertTimestamp(i[0])
+            lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':dt})
+
 if __name__ == '__main__':
     main()
