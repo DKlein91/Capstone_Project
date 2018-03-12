@@ -19,6 +19,7 @@
 # Identifies and parses Application Compatibility Shim Cache entries for forensic data.
 
 import sys
+import os
 import datetime
 import struct
 import zipfile
@@ -87,10 +88,13 @@ def filetime_to_dt(ft):
     # Convert to datetime object
     
     try: 
-        tempft = ft
-        return datetime.datetime.utcfromtimestamp((tempft - 116444736000000000) / 10000000)
-    except ValueError:
+        if ft != 0: 
+            return datetime.datetime.utcfromtimestamp((ft - 116444736000000000) / 10000000)
+        else:
+            return 116444736000000000
+    except ValueError as e:
         return 0
+
 # Return a unique list while preserving ordering.
 def unique_list(li):
 
@@ -100,9 +104,7 @@ def unique_list(li):
             ret_list.append(entry)
     return ret_list
 
-# Write the Log.
-def write_it(rows, outfile=None):
-
+def csv_it(rows, outfile=None):
     try:
 
         if not rows:
@@ -118,6 +120,37 @@ def write_it(rows, outfile=None):
                 f = open(outfile, 'wb')
                 if g_usebom:
                     f.write(codecs.BOM_UTF8)
+                csv_writer = writer(f, delimiter=',')
+                csv_writer.writerows(rows)
+                f.close()
+            except IOError as err:
+                print("[-] Error writing output file: %s" % str(err))
+                return
+
+    except UnicodeEncodeError as err:
+        print("[-] Error writing output file: %s" % str(err))
+        return
+    
+# Write the Log.
+def write_it(rows, outfile=None):
+
+    try:
+
+        if not rows:
+            print("[-] No data to write...")
+            return
+
+        if not outfile:
+            for row in rows:
+                print(" ".join(["%s"%x for x in row]))
+        else:
+            print("[+] Writing output to %s..."%outfile)
+            try:
+                directory = os.path.dirname(outfile)
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                outfile = outfile + "AppCompatCacheResults.csv"
+                f = open(outfile, 'w+')
                 csv_writer = writer(f, delimiter=',')
                 csv_writer.writerows(rows)
                 f.close()
@@ -277,7 +310,7 @@ def read_win8_entries(bin_data, ver_magic):
 
         last_mod_date = convert_filetime(low_datetime, high_datetime)
         try:
-            last_mod_date = last_mod_date.strftime(g_timeformat)
+            last_mod_date = datetime.datetime.fromtimestamp(last_mod_date)
         except ValueError:
             last_mod_date = bad_entry_data
 
@@ -310,11 +343,13 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
         print('cache No. ', count)
         #Set up the next cache entry's location; set up the current entry's cache, which will be independently manipulated.
         next_cache = b_data[8:].find(b'31307473')
-        cache_data = b_data[:next_cache+8]
+        if next_cache is not -1:
+            cache_data = b_data[:next_cache+8]
+        elif next_cache == 1:
+            cache_data = b_data
 
         #Create the header of 12 bytes, which houses the signature and entry size
         b_header=b_data[:entry_meta_len*2]
-#        print('b_header: ', b_data[:entry_meta_len*2], ', ', b_data[entry_meta_len*2 -1: entry_meta_len*2 +8])
 
         # Read in the entry metadata
         # Note: the crc32 hash is of the cache entry data - usused here
@@ -325,22 +360,17 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
             entry_len += b_header[x*2:(x*2)+2]
 
         entry_len =  int(entry_len, 16)
-#        print('entry_len: ', entry_len)
         # Check the magic tag
         if magic != ver_magic:
             raise Exception("Invalid version magic tag found: 0x%x" % struct.unpack("<L", magic)[0])
         b_entry_data = cache_data[entry_meta_len*2: even_checker(entry_len)+((entry_meta_len+2)*2)]
         # Read the path length
         path_len = int(b_entry_data[:2], 16)
-#        print('path_len: ', path_len)
-#        print('b_entry_data: ', b_entry_data)
         if path_len == 0:
             path = 'None'
         else:
             path = binascii.unhexlify(cache_data[(entry_meta_len*2)+2:(entry_meta_len*2) + (path_len+2)*2]).decode('utf-8', 'strict')
 
-        print(path[-8:])
-#        print('cache data test: ', cache_data[(entry_meta_len*2)+2:(entry_meta_len*2) + (path_len+2)*2])
         b_entry_data = cache_data[(entry_meta_len*2) + (path_len+2)*2:]
         # Read the remaining entry data
         b_datetime = b_entry_data[0:16]
@@ -354,7 +384,7 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
         try:
             temp_datetime = int(filetime, 16)
             test_datething = filetime_to_dt(temp_datetime)
-            last_mod_date = test_datething.strftime(g_timeformat)
+            last_mod_date = test_datething
         except ValueError:
             last_mod_date = bad_entry_data
 
@@ -410,78 +440,6 @@ def read_nt6_entries(bin_data, entry):
         print('[-] Error reading Shim Cache data: %s...' % err)
         return None
 
-# Get Shim Cache data from .reg file.
-# Finds the first key named "AppCompatCache" and parses the
-# Hex data that immediately follows. It's a brittle parser,
-# but the .reg format doesn't change too often.
-def read_from_reg(reg_file, quiet=False):
-    out_list = []
-
-    if not path.exists(reg_file):
-        return None
-
-    f = open(reg_file, 'rb')
-    file_contents = f.read()
-    f.close()
-    try:
-        file_contents = file_contents.decode('utf-16')
-    except:
-        pass #.reg file should be UTF-16, if it's not, it might be ANSI, which is not fully supported here.
-
-    if not file_contents.startswith('Windows Registry Editor'):
-        print("[-] Unable to properly decode .reg file: %s" % reg_file)
-        return None
-
-    path_name = None
-    relevant_lines = []
-    found_appcompat = False
-    appcompat_keys = 0
-    for line in file_contents.split("\r\n"):
-        if '\"appcompatcache\"=hex:' in line.lower():
-            relevant_lines.append(line.partition(":")[2])
-            found_appcompat = True
-        elif '\\appcompatcache]' in line.lower() or '\\appcompatibility]' in line.lower():
-            # The Registry path is not case sensitive. Case will depend on export parameter.
-            path_name = line.partition('[')[2].partition(']')[0]
-            appcompat_keys += 1
-        elif found_appcompat and "," in line and '\"' not in line:
-            relevant_lines.append(line)
-        elif found_appcompat and (len(line) == 0 or '\"' in line):
-            # begin processing a block
-            hex_str = "".join(relevant_lines).replace('\\', '').replace(' ', '').replace(',', '')
-            bin_data = binascii.unhexlify(hex_str)
-            tmp_list = read_cache(bin_data, quiet)
-
-            if tmp_list:
-                for row in tmp_list:
-                    if g_verbose:
-                        row.append(path_name)
-                    if row not in out_list:
-                        out_list.append(row)
-
-            # reset variables for next block
-            found_appcompat = False
-            path_name = None
-            relevant_lines = []
-            break
-
-    if appcompat_keys <= 0:
-        print("[-] Unable to find value in .reg file: %s" % reg_file)
-        return None
-
-    if len(out_list) == 0:
-        return None
-    else:
-        # Add the header and return the list.
-        if g_verbose:
-            out_list.insert(0, output_header + ['Key Path'])
-            return out_list
-        else:
-        # Only return unique entries.
-            out_list = unique_list(out_list)
-            out_list.insert(0, output_header)
-            return out_list
-
 # Acquire the current system's Shim Cache data.
 def get_local_data():
 
@@ -513,7 +471,6 @@ def get_local_data():
                             bin_data = reg.QueryValueEx(appcompat_key,
                                                         'AppCompatCache')[0]
                             tmp_list = read_cache(bin_data)
-                            print('lol')
                             if tmp_list:
                                 path_name = 'SYSTEM\\%s\\Control\\Session Manager\\%s' % (control_name, subkey_name)
                                 for row in tmp_list:
@@ -548,49 +505,19 @@ def main(argv=[]):
     global g_usebom
 
     parser = argparse.ArgumentParser(description="Parses Application Compatibilty Shim Cache data")
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="Toggles verbose output")
-    parser.add_argument("-t","--isotime", action="store_const", dest="timeformat", const=DATE_ISO, default=DATE_MDY,
-        help="Use YYYY-MM-DD ISO format instead of MM/DD/YY default")
-    parser.add_argument("-B", "--bom", action="store_true", help="Write UTF8 BOM to CSV for easier Excel 2007+ import")
+    parser.add_argument("-l", "--local", action="store_true", help="Reads data from local system")
+    parser.add_argument("-o", "--out", metavar="PATH", help="Writes to CSV data to a file in PATH and prints. If no PATH specified, then no CSV")
 
-    group = parser.add_argument_group()
-    group.add_argument("-o", "--out", metavar="FILE", help="Writes to CSV data to FILE (default is STDOUT)")
-
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-l", "--local", action="store_true", help="Reads data from local system")
-    group.add_argument("-r", "--reg", metavar="REG", help="Reads data from a .reg registry export file")
-
-    args = parser.parse_args(argv[1:])
-
-    if args.verbose:
-        g_verbose = True
-
-    # Set date/time format
-    g_timeformat = args.timeformat
-
-    # Enable UTF8 Byte Order Mark (BOM) so Excel imports correctly
-    if args.bom:
-        g_usebom = True
-
-    # Read the key data from a registry hive.
-    elif args.reg:
-        print("[+] Reading .reg file: %s..." % args.reg)
-        entries = read_from_reg(args.reg)
-        if not entries:
-            print("[-] No Shim Cache entries found...")
-        else:
-            write_it(entries, args.out)
-
+    action1 = sys.argv[1]
 
     # Read the local Shim Cache data from the current system
-    elif args.local:
+    if action1 in ['-l', 'local']:
         print("[+] Dumping Shim Cache data from the current system...")
         entries = get_local_data()
         if not entries:
             print("[-] No Shim Cache entries found...")
         else:
-            write_it(entries, args.out)
+            write_it(entries, sys.argv[2])
 
 if __name__ == '__main__':
     main(sys.argv)
