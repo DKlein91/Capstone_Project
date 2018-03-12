@@ -2,17 +2,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>1eebc80d-2b0e-4b29-9389-fa4c175ca95f</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>PrefetchTest1.py</StartupFile>
+    <ProjectGuid>78343ea3-b08a-4819-a232-5e6143c291c7</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>WTI_main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>PrefetchTest1</Name>
-    <RootNamespace>PrefetchTest1</RootNamespace>
+    <Name>WindowsTrashInspector</Name>
+    <RootNamespace>PythonApplication4</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-c "C:\Windows\Prefetch\\" "C:\Test\\"</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,7 +26,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PrefetchTest1.py" />
+    <Compile Include="WTI_main.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

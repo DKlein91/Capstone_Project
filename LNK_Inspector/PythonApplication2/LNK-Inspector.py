@@ -1,8 +1,11 @@
-# This is a port of the Windows LNK file parser by Jacob Cunningham - jakec76@users.sourceforge.net, converted from Python 2.x to Python 3.x
-#   v1.0
-
-import sys, struct, datetime, binascii, re
-
+import sys
+import struct
+import datetime
+import binascii
+import re
+import os
+import csv
+import argparse
 
 # HASH of flag attributes
 flag_hash = [["",""] for _ in range(7)]
@@ -57,7 +60,7 @@ show_wnd_hash[10] = "SW_SHOWDEFAULT"
 vol_type_hash = [[""] for _ in range(7)]
 vol_type_hash[0] = "Unknown"
 vol_type_hash[1] = "No root directory"
-vol_type_hash[2] = "Removable (Floppy,Zip,USB,etc.)"
+vol_type_hash[2] = "Removable (Floppy-Zip-USB-etc.)"
 vol_type_hash[3] = "Fixed (Hard Disk)"
 vol_type_hash[4] = "Remote (Network Drive)"
 vol_type_hash[5] = "CD-ROM"
@@ -168,13 +171,17 @@ def parse_lnk(filename):
 
     #read the file in binary module
     f = open(filename, 'rb')
+    
+    csvRow = []
 
     try:
         assert_lnk_signature(f)
     except Exception as e:
-        return "[!] Exception: "+str(e)
+#        print( "[!] Exception: "+filename)
+        return
 
     output = "Lnk File: " + filename + "\n"
+    csvRow.append(filename)
 
     # get the flag bits
     flags = read_unpack_bin(f,20,1)
@@ -199,22 +206,27 @@ def parse_lnk(filename):
     if len(attrib_desc) > 0:
         output += "File Attributes: " + " | ".join(attrib_desc) + "\n"
 
+
     # Create time 8bytes @ 1ch = 28
     create_time = reverse_hex(read_unpack(f,28,8))
     output += "Create Time:   "+ms_time_to_unix_str(int(create_time, 16)) + "\n"
+    csvRow.append(ms_time_to_unix_str(int(create_time, 16)))
 
     # Access time 8 bytes@ 0x24 = 36D
     access_time = reverse_hex(read_unpack(f,36,8))
-    output += "Access Time:   "+ms_time_to_unix_str(int(access_time, 16)) + "\n"
+    output += "Access Time:   "+ms_time_to_unix_str(int(create_time, 16)) + "\n"
+    csvRow.append(ms_time_to_unix_str(int(create_time, 16)))
 
     # Modified Time8b @ 0x2C = 44D
     modified_time = reverse_hex(read_unpack(f,44,8))
     output += "Modified Time: "+ms_time_to_unix_str(int(modified_time, 16)) + "\n"
+    csvRow.append(ms_time_to_unix_str(int(modified_time, 16)))
 
     # Target File length starts @ 34h = 52d
     length_hex = reverse_hex(read_unpack(f,52,4))
     length = int(length_hex, 16)
     output += "Target length: "+str(length) + "\n"
+    csvRow.append(str(length))
 
     # Icon File info starts @ 38h = 56d
     icon_index_hex = reverse_hex(read_unpack(f,56,4))
@@ -265,6 +277,7 @@ def parse_lnk(filename):
     if vol_flags[:2] == "10":
         
         output += "Target is on local volume\n"
+        csvRow.append("Local volume")
 
         # This is the offset of the local volume table within the 
         # File Info Location Structure
@@ -287,17 +300,20 @@ def parse_lnk(filename):
         vol_type_hex = reverse_hex(read_unpack(f,curr_tab_offset,4))
         vol_type = int(vol_type_hex, 16)
         output += "Volume Type: "+str(vol_type_hash[vol_type]) + "\n"
+        csvRow.append(str(vol_type_hash[vol_type]))
 
         # Volume Serial Number
         curr_tab_offset = loc_vol_tab_off + struct_start + 8
         vol_serial = reverse_hex(read_unpack(f,curr_tab_offset,4))
         output += "Volume Serial: "+str(vol_serial) + "\n"
+        csvRow.append(str(vol_serial))
 
         # Get the location, and length of the volume label 
         vol_label_loc = loc_vol_tab_off + struct_start + 16
         vol_label_len = local_vol_tab_end - vol_label_loc
         vol_label = read_unpack_ascii(f,vol_label_loc,vol_label_len)
         output += "Vol Label: "+vol_label + "\n"
+        csvRow.append(vol_label)
 
         #------------------------------------------------------------------------
         # This is the offset of the base path info within the
@@ -310,12 +326,14 @@ def parse_lnk(filename):
         # Read base path data upto NULL term 
         base_path = read_null_term(f,base_path_off)
         output += "Base Path: "+base_path + "\n"
+        csvRow.append(base_path)
 
     # Network Volume Table
     elif vol_flags[:2] == "01":
 
         # TODO: test this section!
         output += "Target is on Network share\n"
+        csvRow.append("Network share")
 
         net_vol_off_hex = reverse_hex(read_unpack(f,net_vol_off,4))
         net_vol_off = struct_start + int(net_vol_off_hex, 16)
@@ -334,6 +352,7 @@ def parse_lnk(filename):
         net_share_name_loc = net_vol_off + net_share_name_loc
         net_share_name = read_null_term(f,net_share_name_loc)
         output += "Network Share Name: "+str(net_share_name) + "\n"
+        csvRow.append(str(net_share_name))
 
         # Mapped Network Drive Info
         net_share_mdrive = net_vol_off + 12
@@ -344,8 +363,11 @@ def parse_lnk(filename):
             net_share_mdrive = net_vol_off + net_share_mdrive
             net_share_mdrive = read_null_term(f,net_share_mdrive)
             output += "Mapped Drive: "+str(net_share_mdrive) + "\n"
+            csvRow.append(str(net_share_mdrive))
 
     else:
+        print(output)
+        print(vol_flags)
         output += " [!] Error: unknown volume flags\n"
         sys.exit(1)
 
@@ -383,19 +405,62 @@ def parse_lnk(filename):
          addnl_text,next_loc = add_info(f,next_loc)
          output += "Icon filename: "+addnl_text + "\n"
 
-    return output
+    print("\n"+output)
+    return csvRow
 
 
 def usage():
     print("Usage: ./pylnker.py .LNK_FILE")
+
     sys.exit(1)
 
 
 if __name__ == "__main__":
     
-    if len(sys.argv) != 2:
-        usage()
+    parser = argparse.ArgumentParser(description='Input and output')
+    parser.add_argument('-i', '--input', metavar='[iP]', type=str, nargs=1, help='File path to the Users folder. Default is C:\\Users')
+    parser.add_argument('-o', '--output', metavar='[oP]', type=str, nargs=1, help='Path to save the CSV file. Default is the folder containing this script.')
     
+    args = parser.parse_args()
+    
+    try:
+        dirName = args.input[0]
+    except:
+        dirName = "C:\\Users"
+
+    try:
+        outputFile = os.path.join(args.output[0], "LNKData.csv")
+    except:
+        outputFile = "LNKData.csv"
+
+    users = []
+    for name in os.listdir(dirName):
+        if(os.path.exists(os.path.join(dirName, name, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\"))):
+            users.append(name)
+
+    out = ""
+    unopenedFiles = 0
+    
+    csvFile = open(outputFile, "w", newline="")
+    writer = csv.writer(csvFile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(["File", "Created", "Accessed", "Modified", "Target Size (bytes)", "Target is on:", "Volume Type", "Volume Serial", "Volume Label", "Target File Path", ""])
+
     # parse .lnk file
-    out = parse_lnk(sys.argv[1])
-    print("\n",out)
+    if(os.path.isfile(dirName)):
+        out = parse_lnk(dirName)
+        writer.writerow(out)
+    else:
+        for user in users:
+            for dirs, sdirs, files in os.walk(os.path.join(dirName, user, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\")):
+                for name in files:
+                    if(os.path.join(dirs, name)):
+                        try:
+                            out = parse_lnk(os.path.join(dirs, name))
+                            writer.writerow(out)
+                        except:
+                            unopenedFiles += 1
+    
+#    if(unopenedFiles > 0):
+#        print("\n" + str(unopenedFiles) + " files were not opened.")
+    csvFile.close()
+

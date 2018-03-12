@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PrefetchTest1", "PrefetchTest1\PrefetchTest1.pyproj", "{1EEBC80D-2B0E-4B29-9389-FA4C175CA95F}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "LNK-Inspector", "PythonApplication2\LNK-Inspector.pyproj", "{045660E5-6AAB-43C8-A154-F9510ACBF72F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +11,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1EEBC80D-2B0E-4B29-9389-FA4C175CA95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EEBC80D-2B0E-4B29-9389-FA4C175CA95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{045660E5-6AAB-43C8-A154-F9510ACBF72F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{045660E5-6AAB-43C8-A154-F9510ACBF72F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {84F67A3D-70AC-41E4-8FB6-904A99B41D4C}
+		SolutionGuid = {8C410679-C8E1-4F52-8B03-F9C91B3E12AF}
 	EndGlobalSection
 EndGlobal
