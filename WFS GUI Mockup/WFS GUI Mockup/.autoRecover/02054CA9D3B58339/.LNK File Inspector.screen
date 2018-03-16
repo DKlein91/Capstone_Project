@@ -1,0 +1,87 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="eab7ac09-8d48-a74f-55c2-bb11e7433dab">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="6ef3def3-3e15-02d7-4f56-e00237f39575">
+            <Content.Layers>
+                <Layer Id="29a36274-5158-d899-0198-16e16a13d27c" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="4388c2c1-b108-ed06-53f7-1f203ab71ad8" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="509becb4-e7c1-7f21-e779-4d42874a3cb1" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="17b5dd12-8cc9-e843-b5ff-d19302fcfba9" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 20:57:42" Id="59e6f11b-264c-05fe-a4ef-8f5e941ca2a3">
+            <Scene.KeyFrames>
+                <KeyFrame Id="f4bca7cc-116a-64b3-3350-407ecf2abbbc">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <Title RichText=".LNK File Inspector" FontFamily="Roboto Condensed" FontStyle="Bold" Id="3cbb90c2-c145-ddf8-20de-76e92fbc0d34" Panel.Bounds="286,28,5*{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="9cce3799-e777-8f1f-65e5-38ebfa1144f1" Panel.Bounds="7,7,159{5,2147483647},115{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;An LNK file is a shortcut or &quot;link&quot; used by Windows as a reference to an original file. It contains the orginal file path, file creation date-time, last access date-time, last modified date-time, file size, volume type, volume serial number, and volume name if applicable.&lt;/Run&gt;" FontFamily="Open Sans" Id="d9cd4f00-ed40-7534-0c89-d58570fee89b" Panel.Bounds="25,157,219{5,2147483647},343{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <OptionGroup Id="8d10abbb-fd80-5b4e-09c0-ffd76ff3381c" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
+                                    <OptionGroup.Items>
+                                        <Option Text="Live System" Id="92320a54-8203-e903-1290-73647c6fbc7a" />
+                                        <Option Text="System Image" Id="57176c29-a8df-403c-0937-a8983bf29c0b" />
+                                    </OptionGroup.Items>
+                                </OptionGroup>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <Button Text="Run Inspector" CornerRadius="3" FontFamily="Open Sans" Id="9a70eef8-ed0e-0f6c-1cdc-591f0cfd28f6" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="6af0f42a-c6b6-0cb3-97eb-75a0e86dcded" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="29a36274-5158-d899-0198-16e16a13d27c">
+                            <Add.Item>
+                                <i:NavigationButton Text="Main Page" FontFamily="Open Sans" Id="6888b654-127c-7d82-b018-c7e4e37264a2" Panel.Bounds="25,561,110{40,2147483647},5*{5,2147483647}">
+                                    <i:NavigationButton.Click>
+                                        <CommandNavigate Screen="/HomePage.screen" Created="03/16/2018 06:57:12" Id="3aea67d5-fc63-2ae0-122d-2e42dec32d70">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:NavigationButton.Click>
+                                    <i:NavigationButton.DoubleClick>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 07:02:24" Id="81ad8213-9577-b6e5-58ea-581b7c8c1553">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:NavigationButton.DoubleClick>
+                                </i:NavigationButton>
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>

@@ -1,0 +1,82 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="32ac1e27-34da-f9e2-e686-a6ef58bc1233">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="251f4d8f-c3aa-5783-7d25-3a75d9cb33ea">
+            <Content.Layers>
+                <Layer Id="c283cffc-369a-44a6-04e8-9e99deae0a71" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="975b7e69-afee-789f-b00d-7a9be26dce65" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="040ca019-1938-d36b-a25a-b346622780c8" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="f45a4f1f-67a0-f33a-16ac-d17bc348c9e6" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 23:30:23" Id="f480bac2-9d77-67fc-7578-7c039de6e005">
+            <Scene.KeyFrames>
+                <KeyFrame Id="bd08ff4c-c58b-a7e0-7df3-1999e89f614c">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <Button Text=" Main Page" Background="#FFFFB9B9" FontFamily="Open Sans" Id="ab7da79e-476c-757a-f726-5556df8e9622" Panel.Bounds="25,547,104{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/11/2018 23:32:04" Id="7f318cbb-9114-8d53-906e-90abffc86bf9">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                    <Button.DoubleClick>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/14/2018 23:31:18" Id="643edc69-f4da-7ea8-f39c-cdc67065d275">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.DoubleClick>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <Title RichText="LOGFILE INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="5c7587d7-420d-168e-39f7-8e0840951527" Panel.Bounds="231,40,5*{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="04881831-3fc2-d01a-b69e-0e2363057f10" Panel.Bounds="8,8,160{5,2147483647},125{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <OptionGroup Id="ca2a58ad-8646-2c59-27c0-f4e7286d92fb" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
+                                    <OptionGroup.Items>
+                                        <Option Text="Live System" Id="d9a57063-f564-4c06-e083-dc75a3c9842b" />
+                                        <Option Text="System Image" Id="6b9f3ad0-2580-7e83-e9bd-3e31fbce9d1b" />
+                                    </OptionGroup.Items>
+                                </OptionGroup>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="228492c3-9226-1410-c04a-dcde110aaf37" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="916d2c3a-edfb-5e43-7908-8ac63e06daed" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>

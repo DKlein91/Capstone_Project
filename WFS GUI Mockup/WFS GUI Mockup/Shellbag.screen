@@ -1,0 +1,80 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="08dde32e-d12a-7f39-a2ed-8cd14bd73165">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="1832207a-d1de-eb44-96c2-6b8904c6a878">
+            <Content.Layers>
+                <Layer Id="ff8df97f-ca8a-31ac-58ea-625e8f9910aa" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="958a077a-c96f-778f-d8c6-c4b6a26c79e4" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="7ef01321-29c4-74ba-f8f6-e037c88cb718" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="ed1daea9-93c2-933f-d665-74b15c2356b4" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 21:31:12" Id="358bb6ea-ab43-4fda-6b4f-b996df04f0f3">
+            <Scene.KeyFrames>
+                <KeyFrame Id="466ce657-ebcf-f181-9082-bfb4f680bb9c">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <Title RichText="SHELLBAG INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="f8bcd9b4-3d87-a9e2-eb4e-e0d133ed7d06" Panel.Bounds="222,27,5*{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="3ae9d91b-2a51-8a28-cc76-5d0d05e27a9e" Panel.Bounds="8,8,160{5,2147483647},125{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <OptionGroup Id="1782ada7-65d1-4d8a-6008-0075eb2c67e4" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
+                                    <OptionGroup.Items>
+                                        <Option Text="Live System" Id="7967df72-ebc8-a7ea-4553-94120f39be05" />
+                                        <Option Text="System Image" Id="e37ee24d-8f31-bae7-3414-dc86c703ea85" />
+                                    </OptionGroup.Items>
+                                </OptionGroup>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <Button Text="Run Inspector" CornerRadius="3" FontFamily="Open Sans" Id="e8a29d45-37f7-db29-ca85-7e7b692375bd" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="c3a0440e-0085-f70e-3403-a24145fd304a" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <i:NavigationButton Text="Main Page" FontFamily="Open Sans" Id="128a7ee2-8e7d-0ed9-0ce3-39892442c654" Panel.Bounds="25,561,110{40,2147483647},5*{5,2147483647}">
+                                    <i:NavigationButton.Click>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 07:00:24" Id="0b82c947-0a2c-5964-8093-f7faf8fb3a25">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:NavigationButton.Click>
+                                </i:NavigationButton>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ff8df97f-ca8a-31ac-58ea-625e8f9910aa">
+                            <Add.Item>
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;Shellbags persist information for directioes even after the directiory is remocved, which means that they can be used to enumerate past mounted volumes, deleted files, and user actions.&lt;/Run&gt;" FontFamily="Open Sans" Id="374a77d2-7eb1-602a-b8a4-2a7de3fd0953" Panel.Bounds="25,157,219{5,2147483647},343{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>

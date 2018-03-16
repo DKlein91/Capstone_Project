@@ -1,0 +1,87 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="2c5f6d3b-a41d-8ddc-a6dc-8be241ab1d4f">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="b26a6c1e-45b9-905f-8c7f-497a758698b0">
+            <Content.Layers>
+                <Layer Id="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="46647164-51da-dc8e-bf5f-6743335bb6e6" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="1ff25b16-c42d-3301-43ca-76c5f0e1616f" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="836054cd-3903-e594-4f77-13276560e6c0" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 21:41:35" Id="cea40c98-cacf-5692-a6dd-263794ad9ca9">
+            <Scene.KeyFrames>
+                <KeyFrame Id="ff794c4f-1717-7bc3-3a67-d4df4b88134b">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <Title RichText="&lt;Run FontWeight=&quot;Bold&quot; &gt;JUMP LIST INSPECTOR&lt;/Run&gt;" FontFamily="Open Sans" Id="fc133f4e-3fd4-47bb-f591-f96c4c1d82bb" Panel.Bounds="234,34,5*{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="010201de-bbae-c148-7fe8-6aa8066b682a" Panel.Bounds="7,7,153{5,2147483647},111{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <OptionGroup Id="cba04d96-02bc-8dce-7eaf-2e077550fafd" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
+                                    <OptionGroup.Items>
+                                        <Option Text="Live System" Id="5dbaf381-0a8e-094f-1ac3-d63280325151" />
+                                        <Option Text="System Image" Id="a6002815-692a-0db0-82e9-f27d50344387" />
+                                    </OptionGroup.Items>
+                                </OptionGroup>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <Button Text="Run Inspector" CornerRadius="3" FontFamily="Open Sans" Id="88808dcf-aaf8-e896-e923-866aeff2b56c" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="5680ff58-44ac-cba2-acaa-1a349958e7b9" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <i:NavigationButton Text="Main Page" FontFamily="Open Sans" Id="91b91379-27f7-63f7-52f7-18e52d47d576" Panel.Bounds="25,561,110{40,2147483647},5*{5,2147483647}">
+                                    <i:NavigationButton.Click>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 06:58:26" Id="132ac22d-496f-cd45-ab53-977c29d1d2ac">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:NavigationButton.Click>
+                                    <i:NavigationButton.DoubleClick>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 06:59:33" Id="3247dd51-fa78-d0c5-b074-47137dfde4af">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:NavigationButton.DoubleClick>
+                                </i:NavigationButton>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;Jump Lists provide users a graphical indication of recent items accesed by each application.  Jump Lists are potentially a valuable source of evidence that can point directly to a user's interactions with the computer.&lt;/Run&gt;" FontFamily="Open Sans" Id="44352207-7cc3-5167-8d50-7d26e2fa1807" Panel.Bounds="25,157,219{5,2147483647},343{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>

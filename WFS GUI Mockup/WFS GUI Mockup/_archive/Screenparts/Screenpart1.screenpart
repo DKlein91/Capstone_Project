@@ -1,0 +1,43 @@
+﻿<?Infragistics.Models format="xaml" version="4" appVersion="10.1.0.81"?>
+<ScreenPart xmlns="http://prototypes.infragistics.com/"
+                                                                                     xmlns:d="http://prototypes.infragistics.com/views/design"
+                                                                                     Id="9dc9588b-a6fb-c53b-7243-4f3b2d89c8b6" d:Design.ShowGuides="False">
+    <ScreenPart.Content>
+        <BorderedContent Width="470" Height="35" Background="#00FFFFFF" Id="d4932626-1c68-da73-1bcc-2bebd2ca367b">
+            <BorderedContent.Layers>
+                <Layer Id="1194b269-f7c7-6ecd-c711-8f5d15ddf9bb" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="5d0f71c8-712d-96ec-876e-65659248879a" Panel.Layout="Stretch" />
+            </BorderedContent.Layers>
+            <BorderedContent.Viewbox>
+                <Viewbox Id="3df8022a-8ab6-05f9-7bca-f818326442c9" />
+            </BorderedContent.Viewbox>
+            <BorderedContent.GuidesInfo>
+                <GuidesInfo Id="e6d52518-a4b3-47f3-7197-5b5e77ed365f" />
+            </BorderedContent.GuidesInfo>
+        </BorderedContent>
+    </ScreenPart.Content>
+    <ScreenPart.Device>
+        <DeviceInfo Id="none" Orientation="None" />
+    </ScreenPart.Device>
+    <ScreenPart.Scenes>
+        <Scene Title="Start" Created="03/11/2018 21:19:32" Id="222eb5f0-d49f-d3c9-7053-ec0197d71aa2">
+            <Scene.KeyFrames>
+                <KeyFrame Id="6ce7809f-20ea-ae12-f938-b970eb86d6c4">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="1194b269-f7c7-6ecd-c711-8f5d15ddf9bb">
+                            <Add.Item>
+                                <ComboBox IsOpen="True" Hint="Search" Id="9f425d3c-4ebf-6529-7589-df95a17699f6" Panel.Bounds="0,0,470{5,2147483647},35{5,2147483647}">
+                                    <ComboBox.Items>
+                                        <Item Text="Date" Id="3d0f30c6-4d24-db2c-9a34-47dd43bb7272" />
+                                        <Item Text="Inspector" Id="6e980257-69bf-9430-eb23-3e9c81474434" />
+                                        <Item Text=" " Id="1dbbe84c-6e6b-779b-bdc5-037b010bafac" />
+                                    </ComboBox.Items>
+                                </ComboBox>
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </ScreenPart.Scenes>
+</ScreenPart>

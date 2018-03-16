@@ -1,0 +1,161 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                Id="e167140e-14a2-9743-6f5e-a16daa5428e1">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="4cc367bc-efda-1514-4d60-95d9dddfd601">
+            <Content.Layers>
+                <Layer Id="999c60ae-74d0-1dfb-df9e-b9752ade048a" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="83de4a6a-c342-ee54-097d-f27ac18b0fd7" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="3da7fa15-9564-342e-972d-947c824f61fc" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="60f2f5f1-f126-4844-2f88-19f1138979ec" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 20:44:22" Id="74067f87-a95f-da9f-b0af-e22bce59756a">
+            <Scene.KeyFrames>
+                <KeyFrame Id="3e4c8869-3a08-efed-fcb9-e7133aff9149">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text=".LNK FILE INSPECTOR" CornerRadius="3" Id="a733ca30-ff8d-e2d0-30fe-782f2b392815" Panel.Bounds="112,171,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/.LNK File Inspector.screen" Created="03/11/2018 20:57:42" Id="80b5c65e-f63e-07ea-552a-f258c7ea2982">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="JUMP LIST INSPECTOR" CornerRadius="3" Id="f003ccc5-0380-6848-413c-0d6cbc736d51" Panel.Bounds="112,248,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Jump LIst.screen" Created="03/11/2018 22:06:57" Id="b0b103b6-ea9d-d1a0-6689-eceb011f2dc0">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="AppCompact CACHE INSPECTOR " CornerRadius="3" Id="a15fbc20-6809-3e86-a8cc-0b30d8406b31" Panel.Bounds="112,325,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/APP CASCHE.screen" Created="03/11/2018 22:12:32" Id="77045c94-fef2-da6d-928e-c2dfe9d56596">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="SHELLBAG INSPECTOR" CornerRadius="3" Id="3710650a-ec46-1a41-c57f-3fcfcf99b934" Panel.Bounds="463,171,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Shellbag.screen" Created="03/11/2018 21:34:03" Id="c7384619-7528-d003-103e-5e866ba8c96a">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="SHIM DATABASE INSPECTOR" CornerRadius="3" Id="a996eb06-92c8-d3b9-10c5-295733fa3553" Panel.Bounds="112,394,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Shim DB.screen" Created="03/11/2018 23:26:05" Id="a6748c6b-6fb0-0e63-cef4-e6a56ebc2793">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="WINDOWS TRASH INSPECTOR" CornerRadius="3" Id="605a35e0-e4ef-c4df-6cc1-8a0f21e17ceb" Panel.Bounds="463,248,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Windows Trash.screen" Created="03/11/2018 22:07:28" Id="fb7abc5a-bd89-c65b-04da-6348637ab07b">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="WINDOWS INDEX.DAT INSPECTOR" CornerRadius="3" FontFamily="Open Sans" Id="3363f8a8-7d66-d927-7e93-6c6aaaca87aa" Panel.Bounds="463,325,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Window Index.screen" Created="03/11/2018 22:16:58" Id="d66641f7-cdd9-48a4-caed-eac2f5247fdc">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="LOGFILE INSPECTOR" CornerRadius="3" FontFamily="Open Sans" Id="795b7ea8-4da4-c02f-334f-ba7517288137" Panel.Bounds="463,394,220{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Logfile.screen" Created="03/11/2018 23:30:23" Id="bc1e560f-acd3-f3b4-a512-3a3df4dcb3ca">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="66d0de82-89be-3946-2c01-666a607e22ac" Panel.Bounds="307,25,169{5,2147483647},121{5,2147483647}">
+                                    <Image.Click>
+                                        <CommandNavigate Screen="/HomePage.screen" Created="03/11/2018 22:15:33" Id="c8cfbf01-9cbe-08e8-a9e4-0e6b8b076e04">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Image.Click>
+                                </Image>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
+                            <Add.Item>
+                                <Button Text="Back to Home " Background="#FFC6C6C6" CornerRadius="3" FontFamily="Open Sans" Id="68071a0c-45b6-c7cc-8127-f844fa083849" Panel.Bounds="41,543,120{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/HomePage.screen" Created="03/14/2018 23:20:24" Id="55f4270c-3999-f0f3-4556-34cc038cb0be">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>
