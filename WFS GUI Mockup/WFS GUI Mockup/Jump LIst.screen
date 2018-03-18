@@ -1,7 +1,7 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
-                                                                                Id="2c5f6d3b-a41d-8ddc-a6dc-8be241ab1d4f">
+                                                                                 xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                 Id="2c5f6d3b-a41d-8ddc-a6dc-8be241ab1d4f">
     <Page.Content>
         <Content Width="800" Height="600" Id="b26a6c1e-45b9-905f-8c7f-497a758698b0">
             <Content.Layers>
@@ -26,57 +26,57 @@
                     <KeyFrame.Operations>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <Title RichText="&lt;Run FontWeight=&quot;Bold&quot; &gt;JUMP LIST INSPECTOR&lt;/Run&gt;" FontFamily="Open Sans" Id="fc133f4e-3fd4-47bb-f591-f96c4c1d82bb" Panel.Bounds="234,34,5*{5,2147483647},5*{5,2147483647}" />
+                                <Title RichText="&lt;Run FontWeight=&quot;Bold&quot; &gt;JUMP LIST INSPECTOR&lt;/Run&gt;" FontFamily="Open Sans" Id="fc133f4e-3fd4-47bb-f591-f96c4c1d82bb" Panel.Bounds="217,50,5*{5,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <Image SourcePath="assets/WFS LOGO 2.png" Id="010201de-bbae-c148-7fe8-6aa8066b682a" Panel.Bounds="7,7,153{5,2147483647},111{5,2147483647}" />
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;Jump Lists provide users a graphical indication of recent items accessed by each application.  Jump Lists are potentially a valuable source of evidence that can point directly to a user's interactions with the computer.&lt;/Run&gt;" FontFamily="Open Sans" Id="44352207-7cc3-5167-8d50-7d26e2fa1807" Panel.Bounds="25,157,236{5,2147483647},237{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Before="fc133f4e-3fd4-47bb-f591-f96c4c1d82bb" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="a4afb710-2a51-4efd-8a68-a28aa6aa975d" Panel.Bounds="8,8,169{5,2147483647},134{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <OptionGroup Id="cba04d96-02bc-8dce-7eaf-2e077550fafd" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
-                                    <OptionGroup.Items>
-                                        <Option Text="Live System" Id="5dbaf381-0a8e-094f-1ac3-d63280325151" />
-                                        <Option Text="System Image" Id="a6002815-692a-0db0-82e9-f27d50344387" />
-                                    </OptionGroup.Items>
-                                </OptionGroup>
+                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="ee84d025-6e84-4c2a-b3a9-5f8068fc5df1" Panel.Bounds="562,359,136{5,2147483647},35{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <Button Text="Run Inspector" CornerRadius="3" FontFamily="Open Sans" Id="88808dcf-aaf8-e896-e923-866aeff2b56c" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="4861f8b1-10a6-40f3-8f95-ef1deaf75ab1" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="5680ff58-44ac-cba2-acaa-1a349958e7b9" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                                <Group GroupName="Group" Id="72f75269-706a-4d95-8ab7-a83670b7cfe8" Panel.Bounds="519,213,0*,0*">
+                                    <Group.Children>
+                                        <Rectangle Thickness="1" Color="#FF000000" Opacity="1" Id="4bc9c047-6ed2-4a8a-a39e-c3288fb72a8e" Panel.Bounds="0,0,221{5,2147483647},122{5,2147483647}" />
+                                        <OptionGroup Id="0ab50ab1-d609-4d09-ae3a-25cab08bc274" Panel.Bounds="6,9,5*{5,2147483647},5*{5,2147483647}">
+                                            <OptionGroup.Items>
+                                                <Option Text="Live System" IsSelected="True" Id="b6528251-59fb-4fa2-8f66-8e4ae4c486a3" />
+                                                <Option Text="System Image" Id="2d05c3ec-b170-476f-915f-8abf700a5b2d" />
+                                            </OptionGroup.Items>
+                                        </OptionGroup>
+                                        <Button Text="Select System Image" FontFamily="Open Sans" Id="c922361c-bf42-48b2-aa9d-5b24e4f9e982" Panel.Bounds="38,81,146{5,2147483647},26{5,2147483647}" />
+                                        <TextBox Text="(Selected System Image)" FontFamily="Open Sans" FontStyle="Italic" IsEnabled="False" Id="406791b4-0e52-4640-8348-da4b4eccb39b" Panel.Bounds="7,46,208{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
                             <Add.Item>
-                                <i:NavigationButton Text="Main Page" FontFamily="Open Sans" Id="91b91379-27f7-63f7-52f7-18e52d47d576" Panel.Bounds="25,561,110{40,2147483647},5*{5,2147483647}">
-                                    <i:NavigationButton.Click>
-                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 06:58:26" Id="132ac22d-496f-cd45-ab53-977c29d1d2ac">
+                                <Button Text=" Main Page" Background="#FFC6C6C6" FontFamily="Open Sans" Id="6148d4b4-a1a9-4abb-b11a-c7492cc1c08b" Panel.Bounds="25,547,104{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/18/2018 22:27:19" Id="c1993aa1-7f85-47b3-9481-c114da98427e">
                                             <CommandNavigate.Transition>
                                                 <NavigateTransition Duration="0" />
                                             </CommandNavigate.Transition>
                                         </CommandNavigate>
-                                    </i:NavigationButton.Click>
-                                    <i:NavigationButton.DoubleClick>
-                                        <CommandNavigate Screen="/Main Page.screen" Created="03/16/2018 06:59:33" Id="3247dd51-fa78-d0c5-b074-47137dfde4af">
-                                            <CommandNavigate.Transition>
-                                                <NavigateTransition Duration="0" />
-                                            </CommandNavigate.Transition>
-                                        </CommandNavigate>
-                                    </i:NavigationButton.DoubleClick>
-                                </i:NavigationButton>
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="ddc3e26b-617d-02d0-4ded-2ad41ffd9fee">
-                            <Add.Item>
-                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;Jump Lists provide users a graphical indication of recent items accesed by each application.  Jump Lists are potentially a valuable source of evidence that can point directly to a user's interactions with the computer.&lt;/Run&gt;" FontFamily="Open Sans" Id="44352207-7cc3-5167-8d50-7d26e2fa1807" Panel.Bounds="25,157,219{5,2147483647},343{5,2147483647}" />
+                                    </Button.Click>
+                                </Button>
                             </Add.Item>
                         </Add>
                     </KeyFrame.Operations>

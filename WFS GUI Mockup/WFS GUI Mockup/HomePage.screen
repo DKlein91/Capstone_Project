@@ -1,6 +1,6 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                Id="51b8c9ec-7642-2676-023c-71b440f6c804">
+                                                                                 Id="51b8c9ec-7642-2676-023c-71b440f6c804">
     <Page.Content>
         <Content Width="800" Height="600" Id="ce11e093-4858-e5df-4a31-9e5053c38c74">
             <Content.Layers>
@@ -30,7 +30,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Button Text="Search" CornerRadius="3" Id="c7212245-7d88-56a3-5fc4-d8c40d7d6621" Panel.Bounds="337,414,80{5,2147483647},35{5,2147483647}">
+                                <Button Text="Search" CornerRadius="3" Id="c7212245-7d88-56a3-5fc4-d8c40d7d6621" Panel.Bounds="360,490,80{5,2147483647},35{5,2147483647}">
                                     <Button.Click>
                                         <CommandNavigate Screen="/Main Page.screen" Created="03/11/2018 20:44:22" Id="b64df1d3-4a5d-341b-2353-598659b9f0f2">
                                             <CommandNavigate.Transition>
@@ -39,11 +39,6 @@
                                         </CommandNavigate>
                                     </Button.Click>
                                 </Button>
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <Title RichText="&lt;Run FontFamily=&quot;Roboto Condensed&quot; &gt;Welcome to Windows Forensics Suite&#xA;&lt;/Run&gt;" FontFamily="Open Sans" Id="e3241841-feaf-e2d1-6e11-4463deb38e57" Panel.Bounds="183,60,495*{5,2147483647},50{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
@@ -61,7 +56,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Button Text="Settings " Background="#FFC6C6C6" CornerRadius="3" FontFamily="Open Sans" Id="b6ef9b68-7bf9-bc7d-2344-a1ce8c627739" Panel.Bounds="621,546,114{5,2147483647},35{5,2147483647}">
+                                <Button Text="Settings " Background="#FFC6C6C6" CornerRadius="3" FontFamily="Open Sans" Id="b6ef9b68-7bf9-bc7d-2344-a1ce8c627739" Panel.Bounds="667,546,114{5,2147483647},35{5,2147483647}">
                                     <Button.Click>
                                         <CommandNavigate Screen="/Settings page.screen" Created="03/14/2018 23:11:44" Id="ac63189e-6e19-0203-5e63-4c610098f7dd">
                                             <CommandNavigate.Transition>
@@ -77,69 +72,87 @@
                                 <Icon CatalogId="linea-gear" Id="96f6c7a4-2265-4f53-6879-f58728e102ef" Panel.Bounds="708,550,26{5,2147483647},26{5,2147483647}" />
                             </Add.Item>
                         </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                        <Add Property="Panel.Children" Before="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="0b0bd026-801c-c891-0faf-9dad923224c3" Panel.Bounds="459,239,120{5,2147483647},5*{5,2147483647}" />
+                                <Group GroupName="Group" Id="879dc1d4-d14f-407a-a8bb-b57006f8b139" Panel.Bounds="113,179,0*,0*">
+                                    <Group.Children>
+                                        <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="0b0bd026-801c-c891-0faf-9dad923224c3" Panel.Bounds="120,60,120{5,2147483647},5*{5,2147483647}" />
+                                        <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Panel.Bounds="120,200,120{5,2147483647},5*{5,2147483647}" />
+                                        <Label RichText="Start Date:" FontFamily="Open Sans" Id="484b5d7e-7290-d61b-70ee-40d99b8890ac" Panel.Bounds="147,30,65*{5,2147483647},24{5,2147483647}" />
+                                        <Label RichText="End Date:" FontFamily="Open Sans" Id="2195e2f0-5c7d-a5a0-bbc6-f8205d309d09" Panel.Bounds="150,169,59*{5,2147483647},24{5,2147483647}" />
+                                        <Icon CatalogId="fa-calendar" Id="7a1caf9f-7236-e5b4-8968-394ff770fe53" Panel.Bounds="215,63,26{5,2147483647},26{5,2147483647}" />
+                                        <Icon CatalogId="fa-calendar" Id="6035a7e1-c5b9-22ae-6538-c724d8394b95" Panel.Bounds="215,203,26{5,2147483647},26{5,2147483647}" />
+                                        <CheckBox Text="Modified" FontFamily="Open Sans" Id="cfaf399f-5431-392d-53a3-6abb64966d54" Panel.Bounds="0,68,5*{5,2147483647},5*{5,2147483647}" />
+                                        <CheckBox Text="Deleted" FontFamily="Open Sans" Id="537fdeb5-1e75-db72-0973-aa11207efef9" Panel.Bounds="0,112,5*{5,2147483647},5*{5,2147483647}" />
+                                        <CheckBox Text="Accessed" FontFamily="Open Sans" Id="54ace3f5-cfda-4682-a9ce-cbbd4acd692d" Panel.Bounds="0,154,5*{5,2147483647},5*{5,2147483647}" />
+                                        <CheckBox Text="All" FontFamily="Open Sans" Id="b64b2c5b-e984-0e56-e608-85ed4dfd2750" Panel.Bounds="0,197,5*{5,2147483647},5*{5,2147483647}" />
+                                        <CheckBox Text="Created" FontFamily="Open Sans" Id="ea0245c4-4d7d-50c9-b436-4c63563ce1cc" Panel.Bounds="0,26,5*{5,2147483647},5*{5,2147483647}" />
+                                        <Label RichText="Search by date range:" FontFamily="Open Sans" Id="ebd077e6-44be-4024-9408-f6b9f655a857" Panel.Bounds="0,0,132*{5,2147483647},24{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Before="8fc446c4-c1f5-4956-a250-87723f001e24" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                            <Add.Item>
+                                <Group GroupName="Group" Id="93c3a608-4db7-4119-b5cf-24cc1aeedf5e" Panel.Bounds="466,179,0*,0*">
+                                    <Group.Children>
+                                        <TextBox Text="Filename " FontFamily="Open Sans" Id="4c4ccb07-1fe6-efa1-5503-b147e0ec3e77" Panel.Bounds="0,19,221{5,2147483647},5*{5,2147483647}" />
+                                        <Label RichText="Search for a specific file:" FontFamily="Open Sans" Id="d4fa69f6-6236-4e7d-aaba-fedd323aac23" Panel.Bounds="0,0,5*{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Panel.Bounds="459,342,120{5,2147483647},5*{5,2147483647}" />
+                                <Group GroupName="Group" Id="8fc446c4-c1f5-4956-a250-87723f001e24" Panel.Bounds="466,235,0*,0*">
+                                    <Group.Children>
+                                        <TextBox Text="Username" FontFamily="Open Sans" Id="854281d4-49f3-4ca7-a99f-5e37bf900edb" Panel.Bounds="0,18,221{5,2147483647},5*{5,2147483647}" />
+                                        <Label RichText="Search for a specific user:" FontFamily="Open Sans" Id="0d709de7-df3e-43ac-93f3-7dd5cf67c957" Panel.Bounds="0,0,5*{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Label RichText="Start Date:" FontFamily="Open Sans" Id="484b5d7e-7290-d61b-70ee-40d99b8890ac" Panel.Bounds="486,217,5*{5,2147483647},5*{5,2147483647}" />
+                                <Title RichText="WINDOWS FORENSICS SUITE" FontFamily="Open Sans" FontStyle="Bold" Id="8f545540-1df7-410a-9933-394607b3f0e3" Panel.Bounds="223,51,5*{5,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Label RichText="End Date:" FontFamily="Open Sans" Id="2195e2f0-5c7d-a5a0-bbc6-f8205d309d09" Panel.Bounds="489,319,5*{5,2147483647},5*{5,2147483647}" />
+                                <Label RichText="Search Criteria:&#xD;&#xA;(All search fields are optional)" Align="Center" FontFamily="Open Sans" FontStyle="Bold" Id="d467dbe3-2b5e-4b7b-b8b6-07e56ef3830a" Panel.Bounds="303,128,5*{5,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Icon CatalogId="fa-calendar" Id="7a1caf9f-7236-e5b4-8968-394ff770fe53" Panel.Bounds="554,241,19{5,2147483647},19{5,2147483647}" />
+                                <Group GroupName="Group" Id="9aee83f3-523f-457a-a815-314bbc966eb5" Panel.Bounds="466,299,0*,0*">
+                                    <Group.Children>
+                                        <Rectangle Thickness="1" Color="#FF000000" Opacity="1" Id="ae99388e-ba46-432d-afe9-ba3aa05a287d" Panel.Bounds="0,0,221{5,2147483647},122{5,2147483647}" />
+                                        <OptionGroup Id="2fd3afe8-e53f-4bdc-ab94-4f0695ba9dba" Panel.Bounds="6,9,5*{5,2147483647},5*{5,2147483647}">
+                                            <OptionGroup.Items>
+                                                <Option Text="Live System" IsSelected="True" Id="6ee784b7-fd4b-4dc3-b2a8-60be195807e3" />
+                                                <Option Text="System Image" Id="8d73cc68-54cf-45cf-b2c8-eb8fd5b18b6b" />
+                                            </OptionGroup.Items>
+                                        </OptionGroup>
+                                        <Button Text="Select System Image" FontFamily="Open Sans" Id="35e2ee06-93a4-46de-ac43-7e9296a8fa73" Panel.Bounds="38,81,146{5,2147483647},26{5,2147483647}" />
+                                        <TextBox Text="(Selected System Image)" FontFamily="Open Sans" FontStyle="Italic" IsEnabled="False" Id="7b04ea97-98b2-40a9-b6d2-6b2282ead8e8" Panel.Bounds="7,46,208{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                        <Add Property="Panel.Children" Before="fd44c535-64c2-43e0-8974-2cf9e1fcee7d" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Icon CatalogId="fa-calendar" Id="6035a7e1-c5b9-22ae-6538-c724d8394b95" Panel.Bounds="554,344,19{5,2147483647},19{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <CheckBox Text="Modification" FontFamily="Open Sans" Id="cfaf399f-5431-392d-53a3-6abb64966d54" Panel.Bounds="636,248,5*{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <CheckBox Text="Deletion" FontFamily="Open Sans" Id="537fdeb5-1e75-db72-0973-aa11207efef9" Panel.Bounds="636,280,5*{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <CheckBox Text="Accessed" FontFamily="Open Sans" Id="54ace3f5-cfda-4682-a9ce-cbbd4acd692d" Panel.Bounds="636,311,5*{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <CheckBox Text="All" FontFamily="Open Sans" Id="b64b2c5b-e984-0e56-e608-85ed4dfd2750" Panel.Bounds="636,343,5*{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <CheckBox Text="Creation" FontFamily="Open Sans" Id="ea0245c4-4d7d-50c9-b436-4c63563ce1cc" Panel.Bounds="636,217,5*{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <TextBox Text="File Name " FontFamily="Open Sans" Id="4c4ccb07-1fe6-efa1-5503-b147e0ec3e77" Panel.Bounds="52,254,221{5,2147483647},5*{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <TextBox Text="User Name" FontFamily="Open Sans" Id="854281d4-49f3-4ca7-a99f-5e37bf900edb" Panel.Bounds="52,311,221{5,2147483647},5*{5,2147483647}" />
+                                <Group GroupName="Group" Id="944f7b5f-2f99-4bd3-b698-6d7e80d58836" Panel.Bounds="238,436,0*,0*">
+                                    <Group.Children>
+                                        <OptionGroup Id="626771cd-d80f-4994-b053-9e1054c7f13c" Panel.Bounds="98,0,5*{5,2147483647},5*{5,2147483647}">
+                                            <OptionGroup.Items>
+                                                <Option Text="Date" IsSelected="True" Id="0eab027b-b465-49c7-a3d4-596d1fea37ed" />
+                                                <Option Text="Filename" Id="14d2e79d-2108-4e71-bccb-b98d76caf9dc" />
+                                                <Option Text="Username" Id="c3194a5a-8999-4797-9369-48428f4748e2" />
+                                            </OptionGroup.Items>
+                                        </OptionGroup>
+                                        <Label RichText="Sort results by:" FontFamily="Open Sans" Id="fd44c535-64c2-43e0-8974-2cf9e1fcee7d" Panel.Bounds="0,6,5*{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
                     </KeyFrame.Operations>

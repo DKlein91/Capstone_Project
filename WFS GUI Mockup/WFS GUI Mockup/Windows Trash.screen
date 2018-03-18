@@ -1,7 +1,7 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
-                                                                                Id="3eeef331-dc75-091e-2ab8-640c757f5352">
+                                                                                 xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                 Id="3eeef331-dc75-091e-2ab8-640c757f5352">
     <Page.Content>
         <Content Width="800" Height="600" Id="484aedd8-c8d0-0fbe-84b4-0b424594f87c">
             <Content.Layers>
@@ -26,32 +26,12 @@
                     <KeyFrame.Operations>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
                             <Add.Item>
-                                <Title RichText="WINDOWS TRASH INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="d5e38a8a-ff54-6aac-9b89-cf1446961f38" Panel.Bounds="205,47,5*{5,2147483647},5*{5,2147483647}" />
+                                <Title RichText="TRASH INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="d5e38a8a-ff54-6aac-9b89-cf1446961f38" Panel.Bounds="245,51,5*{5,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
                             <Add.Item>
-                                <OptionGroup Id="3f38b7fe-3c02-9be6-6e71-d1b0058344bc" Panel.Bounds="519,436,5*{5,2147483647},5*{5,2147483647}">
-                                    <OptionGroup.Items>
-                                        <Option Text="Live System" Id="8af51975-9192-7da8-0b55-5927fdd719fb" />
-                                        <Option Text="System Image" Id="9e7c2fbd-9f51-9dea-22db-d801e4368cd0" />
-                                    </OptionGroup.Items>
-                                </OptionGroup>
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
-                            <Add.Item>
-                                <Image SourcePath="assets/WFS LOGO 2.png" Id="c87a74ca-2a5c-6a8d-3e72-2562689f4802" Panel.Bounds="8,8,160{5,2147483647},125{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
-                            <Add.Item>
-                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="7e98f75e-fa71-074d-1e47-6f5eefab335f" Panel.Bounds="571,287,136{5,2147483647},35{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
-                            <Add.Item>
-                                <Button Text=" Main Page" Background="#FFFFB9B9" FontFamily="Open Sans" Id="6fda4f25-f3d4-ea19-c5ba-1cb7114fece1" Panel.Bounds="25,547,104{5,2147483647},35{5,2147483647}">
+                                <Button Text=" Main Page" Background="#FFC6C6C6" FontFamily="Open Sans" Id="6fda4f25-f3d4-ea19-c5ba-1cb7114fece1" Panel.Bounds="25,547,104{5,2147483647},35{5,2147483647}">
                                     <Button.Click>
                                         <CommandNavigate Screen="/Main Page.screen" Created="03/14/2018 23:32:12" Id="bd2411f0-848d-96b9-737e-a091f960ee20">
                                             <CommandNavigate.Transition>
@@ -64,12 +44,39 @@
                         </Add>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
                             <Add.Item>
-                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;This inspector searches the Recycle Bin and provides the name, orignal file path, size, and deletion date of each file.&lt;/Run&gt;" FontFamily="Open Sans" Id="fa5ea030-ea06-a16f-b003-ff4a10ce47c9" Panel.Bounds="25,158,219{5,2147483647},343{5,2147483647}" />
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;This inspector searches the Recycle Bin and provides the name, original file path, size, and deletion date of each file.&lt;/Run&gt;" FontFamily="Open Sans" Id="fa5ea030-ea06-a16f-b003-ff4a10ce47c9" Panel.Bounds="25,157,236{5,2147483647},137{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Before="d5e38a8a-ff54-6aac-9b89-cf1446961f38" Target="9975221d-3939-2c68-f858-99462bcf42f6">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="c501b809-6d38-4252-a2d7-9a7fb265a511" Panel.Bounds="8,8,169{5,2147483647},134{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
                             <Add.Item>
-                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="c08916a2-9c03-51e0-c859-494338ae62e1" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="ff36d991-ccc5-4402-b09e-1027652950ee" Panel.Bounds="562,359,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="8368c8ee-8466-4fe1-bc41-d54d2298ab72" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
+                            <Add.Item>
+                                <Group GroupName="Group" Id="872f16c2-05ea-450d-905c-7c256047925c" Panel.Bounds="519,213,0*,0*">
+                                    <Group.Children>
+                                        <Rectangle Thickness="1" Color="#FF000000" Opacity="1" Id="bfe999a6-7a4a-4f61-a74e-d1c627754aeb" Panel.Bounds="0,0,221{5,2147483647},122{5,2147483647}" />
+                                        <OptionGroup Id="a03499ea-b9e3-4070-ad7d-9b1993a536cd" Panel.Bounds="6,9,5*{5,2147483647},5*{5,2147483647}">
+                                            <OptionGroup.Items>
+                                                <Option Text="Live System" IsSelected="True" Id="a321e38f-af8c-4722-960d-22f054f94a12" />
+                                                <Option Text="System Image" Id="cd602664-80fa-4e44-8144-8a102dc0a632" />
+                                            </OptionGroup.Items>
+                                        </OptionGroup>
+                                        <Button Text="Select System Image" FontFamily="Open Sans" Id="3221dbe4-5fb6-4f63-9512-2e80aa58c505" Panel.Bounds="38,81,146{5,2147483647},26{5,2147483647}" />
+                                        <TextBox Text="(Selected System Image)" FontFamily="Open Sans" FontStyle="Italic" IsEnabled="False" Id="8741cec3-ad67-4b06-aac0-aabeeb8abfe6" Panel.Bounds="7,46,208{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
                             </Add.Item>
                         </Add>
                     </KeyFrame.Operations>

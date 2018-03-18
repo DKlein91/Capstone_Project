@@ -39,7 +39,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
                             <Add.Item>
-                                <Title RichText="LOGFILE INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="5c7587d7-420d-168e-39f7-8e0840951527" Panel.Bounds="231,51,5*{5,2147483647},5*{5,2147483647}" />
+                                <Title RichText="USN JOURNAL INSPECTOR" FontFamily="Open Sans" FontStyle="Bold" Id="5c7587d7-420d-168e-39f7-8e0840951527" Panel.Bounds="231,51,5*{5,2147483647},5*{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
@@ -59,7 +59,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">
                             <Add.Item>
-                                <Label RichText="The Logfile Inspector provides information regarding changes made to the system by users. " FontSize="18" FontFamily="Open Sans" Id="5d6e1192-583c-4139-8e2c-fd4909234be3" Panel.Bounds="25,157,236{5,2147483647},293{5,2147483647}" />
+                                <Label RichText="The USN Journal Inspector provides information regarding changes made to the system by users. " FontSize="18" FontFamily="Open Sans" Id="5d6e1192-583c-4139-8e2c-fd4909234be3" Panel.Bounds="25,157,236{5,2147483647},293{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="c283cffc-369a-44a6-04e8-9e99deae0a71">

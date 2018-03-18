@@ -1,0 +1,87 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                 xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                 Id="9c398bc7-a1b1-01eb-17bd-ba04115c2841">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="f66241e0-ed4d-2700-8389-c96a465e99bd">
+            <Content.Layers>
+                <Layer Id="b76f734e-7cd0-5216-688f-d19c45cbc69e" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="33e8eec5-b7c5-7908-34c4-3bf4f7396e7d" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="a18a1ba3-7696-3a6d-3664-2efe71e2b87d" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="aec25073-add9-31b5-8b3f-89e4128456da" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/11/2018 22:12:32" Id="b943b46a-ed6f-2313-f8d9-846ea341c9c0">
+            <Scene.KeyFrames>
+                <KeyFrame Id="4fd77b3e-6e91-03b8-3e10-1e726b1e7b47">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Title RichText="APPCOMPATCACHE/SHIMDB&#xD;&#xA;INSPECTOR" Align="Center" FontFamily="Open Sans" FontStyle="Bold" Id="27ccd776-3eb7-b0bf-1ae6-c8f0b85ebde8" Panel.Bounds="239,28,5*{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Button Text="Run Inspector" CornerRadius="3" FontFamily="Open Sans" Id="5028b1c7-d512-25ad-0489-7bfff9b19ab7" Panel.Bounds="562,359,136{5,2147483647},35{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <i:SearchBar WatermarkText="Search" FontFamily="Open Sans" Id="2457d3e7-0d4f-ced9-f344-32a8e96ce4f9" Panel.Bounds="502,162,255{105,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Label RichText="&lt;Run FontSize=&quot;18&quot; &gt;The AppCompatCache/ShimDB has filename and last modified time. &lt;/Run&gt;" FontFamily="Open Sans" Id="db6fc4f8-d109-4112-d1e3-1edfd0c3131e" Panel.Bounds="25,157,219{5,2147483647},343{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Before="27ccd776-3eb7-b0bf-1ae6-c8f0b85ebde8" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Image SourcePath="assets/WFS LOGO 2.png" Id="92eef72f-ca4f-47d1-baa9-c0d98c7c7add" Panel.Bounds="8,8,169{5,2147483647},134{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Group GroupName="Group" Id="3677e925-7543-4d50-9f3b-b7eef5169d31" Panel.Bounds="519,213,0*,0*">
+                                    <Group.Children>
+                                        <Rectangle Thickness="1" Color="#FF000000" Opacity="1" Id="bc0042ee-38c9-492b-8b80-6414ddb01f7b" Panel.Bounds="0,0,221{5,2147483647},122{5,2147483647}" />
+                                        <OptionGroup Id="addd2ddb-ddab-43d6-a300-3de817cc53fe" Panel.Bounds="6,9,5*{5,2147483647},5*{5,2147483647}">
+                                            <OptionGroup.Items>
+                                                <Option Text="Live System" IsSelected="True" Id="c8e6c138-6ea9-4f52-af8e-6e9fb47135d9" />
+                                                <Option Text="System Image" Id="83b521d3-e8eb-4af7-b12d-37305e80a6ad" />
+                                            </OptionGroup.Items>
+                                        </OptionGroup>
+                                        <Button Text="Select System Image" FontFamily="Open Sans" Id="d7e425cc-bc00-425d-9ab8-323e26692414" Panel.Bounds="38,81,146{5,2147483647},26{5,2147483647}" />
+                                        <TextBox Text="(Selected System Image)" FontFamily="Open Sans" FontStyle="Italic" IsEnabled="False" Id="85e178cd-9cc7-47af-bab9-655c80e8e591" Panel.Bounds="7,46,208{5,2147483647},5*{5,2147483647}" />
+                                    </Group.Children>
+                                </Group>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="b76f734e-7cd0-5216-688f-d19c45cbc69e">
+                            <Add.Item>
+                                <Button Text=" Main Page" Background="#FFC6C6C6" FontFamily="Open Sans" Id="49b197d0-2112-479a-9aa8-accf07c13d4c" Panel.Bounds="25,547,104{5,2147483647},35{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Main Page.screen" Created="03/18/2018 22:25:10" Id="1a434335-6310-48f6-94ce-19706afcf93c">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>
