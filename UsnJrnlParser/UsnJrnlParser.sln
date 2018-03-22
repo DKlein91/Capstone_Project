@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "UsnJrnlParser", "UsnJrnlParser\UsnJrnlParser.pyproj", "{EC421DB0-D2B0-4CB1-9EBA-9B39FC22D23A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC421DB0-D2B0-4CB1-9EBA-9B39FC22D23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC421DB0-D2B0-4CB1-9EBA-9B39FC22D23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {226746CC-9684-417C-A02D-1B63ECFEDFC4}
+	EndGlobalSection
+EndGlobal
