@@ -54,7 +54,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
                             <Add.Item>
-                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="ff36d991-ccc5-4402-b09e-1027652950ee" Panel.Bounds="562,359,136{5,2147483647},35{5,2147483647}" />
+                                <Button Text="Run Inspector" FontFamily="Open Sans" Id="ff36d991-ccc5-4402-b09e-1027652950ee" Panel.Bounds="562,356,136{5,2147483647},35{5,2147483647}" />
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="9975221d-3939-2c68-f858-99462bcf42f6">
