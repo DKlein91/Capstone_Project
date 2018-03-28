@@ -1,0 +1,55 @@
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
+<Page xmlns="http://prototypes.infragistics.com/"
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="d545e0f9-a5b4-5011-fe6c-f609cabf0ea8">
+    <Page.Content>
+        <Content Width="800" Height="600" Id="b86e91e0-2960-84fc-5768-c10f223fa584">
+            <Content.Layers>
+                <Layer Id="35aefc46-f30d-8a45-e013-68ab320e256c" Panel.Layout="Stretch" />
+                <AnnotationsLayer Id="c125718c-c0f6-b3a4-3665-8010b72a423f" Panel.Layout="Stretch" />
+            </Content.Layers>
+            <Content.Viewbox>
+                <Viewbox Size="800,600" Id="2638319f-5d19-72fc-4f7c-511e6deb3e8c" />
+            </Content.Viewbox>
+            <Content.GuidesInfo>
+                <GuidesInfo Id="4e9fd8a4-ee1e-dc96-7ef9-9a3f0f0f97b2" />
+            </Content.GuidesInfo>
+        </Content>
+    </Page.Content>
+    <Page.Device>
+        <DeviceInfo Id="Browser" Orientation="None" />
+    </Page.Device>
+    <Page.Scenes>
+        <Scene Title="Start" Created="03/28/2018 22:32:15" Id="0defc2d5-09f4-40e1-6ca6-887839c28578">
+            <Scene.KeyFrames>
+                <KeyFrame Id="c2eabfce-0ba4-10ee-639b-937a7bd03876">
+                    <KeyFrame.Operations>
+                        <Add Property="Panel.Children" Target="35aefc46-f30d-8a45-e013-68ab320e256c">
+                            <Add.Item>
+                                <i:DatePicker DateTime="03/28/2018 18:33:00" ShowPicker="True" FontFamily="Open Sans" Id="af53e1be-b89d-58be-1a5c-22b6ec8f3402" Panel.Bounds="10,24,5*{5,2147483647},5*{5,2147483647}">
+                                    <i:DatePicker.Click>
+                                        <CommandNavigate Screen="/HomePage.screen" Created="03/28/2018 22:33:09" Id="b888aff5-4fac-8b19-ee59-042c989733a9">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </i:DatePicker.Click>
+                                </i:DatePicker>
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="35aefc46-f30d-8a45-e013-68ab320e256c">
+                            <Add.Item>
+                                <TextBox FontFamily="Open Sans" Id="faed9d73-095b-1dd0-f31d-8a6a45a91f87" Panel.Bounds="522,143,120{5,2147483647},5*{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="35aefc46-f30d-8a45-e013-68ab320e256c">
+                            <Add.Item>
+                                <Icon CatalogId="fa-calendar" Id="7fddbbd7-78ad-15d9-7827-9ad0f3a32c6c" Name="Date Picker" Panel.Bounds="621,146,18{5,2147483647},18{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+    </Page.Scenes>
+</Page>

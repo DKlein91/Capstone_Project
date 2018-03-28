@@ -1,6 +1,6 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                 Id="e167140e-14a2-9743-6f5e-a16daa5428e1">
+                                                                                Id="e167140e-14a2-9743-6f5e-a16daa5428e1">
     <Page.Content>
         <Content Width="800" Height="600" Id="4cc367bc-efda-1514-4d60-95d9dddfd601">
             <Content.Layers>
@@ -142,12 +142,28 @@
                         </Add>
                         <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
                             <Add.Item>
-                                <Button Text="JUMP LIST INSPECTOR" CornerRadius="3" Id="bdfb7d6b-d77b-4d62-ba23-a0e6f612e2ad" Panel.Bounds="71,318,272{5,2147483647},36{5,2147483647}" />
+                                <Button Text="JUMP LIST INSPECTOR" CornerRadius="3" Id="bdfb7d6b-d77b-4d62-ba23-a0e6f612e2ad" Panel.Bounds="71,318,272{5,2147483647},36{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Jump LIst.screen" Created="03/26/2018 23:15:46" Id="c71d201a-1712-bb19-f435-e8914313428d">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
                             </Add.Item>
                         </Add>
                         <Add Property="Panel.Children" Target="999c60ae-74d0-1dfb-df9e-b9752ade048a">
                             <Add.Item>
-                                <Button Text="TRASH INSPECTOR" CornerRadius="3" Id="5e8bb9b9-e9f6-4580-ae69-14ee306ceec8" Panel.Bounds="456,318,272{5,2147483647},36{5,2147483647}" />
+                                <Button Text="TRASH INSPECTOR" CornerRadius="3" Id="5e8bb9b9-e9f6-4580-ae69-14ee306ceec8" Panel.Bounds="456,318,272{5,2147483647},36{5,2147483647}">
+                                    <Button.Click>
+                                        <CommandNavigate Screen="/Windows Trash.screen" Created="03/26/2018 23:16:51" Id="4b16052e-b31f-465c-6c14-3fd53828091f">
+                                            <CommandNavigate.Transition>
+                                                <NavigateTransition Duration="0" />
+                                            </CommandNavigate.Transition>
+                                        </CommandNavigate>
+                                    </Button.Click>
+                                </Button>
                             </Add.Item>
                         </Add>
                     </KeyFrame.Operations>

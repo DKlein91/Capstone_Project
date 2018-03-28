@@ -1,7 +1,7 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                 xmlns:i="http://prototypes.infragistics.com/ios7/"
-                                                                                 Id="3eeef331-dc75-091e-2ab8-640c757f5352">
+                                                                                xmlns:i="http://prototypes.infragistics.com/ios7/"
+                                                                                Id="3eeef331-dc75-091e-2ab8-640c757f5352">
     <Page.Content>
         <Content Width="800" Height="600" Id="484aedd8-c8d0-0fbe-84b4-0b424594f87c">
             <Content.Layers>

@@ -1,10 +1,10 @@
-﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.2.0.98"?>
+﻿<?Infragistics.Models format="xaml" version="30" appVersion="10.1.0.81"?>
 <Page xmlns="http://prototypes.infragistics.com/"
-                                                                                 Id="51b8c9ec-7642-2676-023c-71b440f6c804">
+                                                                                Id="51b8c9ec-7642-2676-023c-71b440f6c804">
     <Page.Content>
         <Content Width="800" Height="600" Id="ce11e093-4858-e5df-4a31-9e5053c38c74">
             <Content.Layers>
-                <Layer Id="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612" Panel.Layout="Stretch" />
+                <Layer Id="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612" Name="root" Panel.Layout="Stretch" />
                 <AnnotationsLayer Id="a1115485-93b3-6a53-cb85-11cc6f0626a5" Panel.Layout="Stretch" />
             </Content.Layers>
             <Content.Viewbox>
@@ -30,7 +30,7 @@
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Button Text="Search" CornerRadius="3" Id="c7212245-7d88-56a3-5fc4-d8c40d7d6621" Panel.Bounds="360,490,80{5,2147483647},35{5,2147483647}">
+                                <Button Text="Search" CornerRadius="3" Id="c7212245-7d88-56a3-5fc4-d8c40d7d6621" Panel.Bounds="368,550,80{5,2147483647},35{5,2147483647}">
                                     <Button.Click>
                                         <CommandNavigate Screen="/Main Page.screen" Created="03/11/2018 20:44:22" Id="b64df1d3-4a5d-341b-2353-598659b9f0f2">
                                             <CommandNavigate.Transition>
@@ -69,30 +69,37 @@
                         </Add>
                         <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Icon CatalogId="linea-gear" Id="96f6c7a4-2265-4f53-6879-f58728e102ef" Panel.Bounds="708,550,26{5,2147483647},26{5,2147483647}" />
-                            </Add.Item>
-                        </Add>
-                        <Add Property="Panel.Children" Before="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
-                            <Add.Item>
-                                <Group GroupName="Group" Id="879dc1d4-d14f-407a-a8bb-b57006f8b139" Panel.Bounds="113,179,0*,0*">
+                                <Group GroupName="Group" Id="879dc1d4-d14f-407a-a8bb-b57006f8b139" Panel.Bounds="125,179,0*,0*">
                                     <Group.Children>
-                                        <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="0b0bd026-801c-c891-0faf-9dad923224c3" Panel.Bounds="120,60,120{5,2147483647},5*{5,2147483647}" />
-                                        <TextBox Text="dd/mm/yyyy" FontFamily="Open Sans" Id="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Panel.Bounds="120,200,120{5,2147483647},5*{5,2147483647}" />
+                                        <TextBox Text="24/12/2012" FontFamily="Open Sans" Id="0b0bd026-801c-c891-0faf-9dad923224c3" Panel.Bounds="120,60,120{5,2147483647},5*{5,2147483647}" />
+                                        <TextBox Text="24/12/2012" FontFamily="Open Sans" Id="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Panel.Bounds="120,200,120{5,2147483647},5*{5,2147483647}" />
                                         <Label RichText="Start Date:" FontFamily="Open Sans" Id="484b5d7e-7290-d61b-70ee-40d99b8890ac" Panel.Bounds="147,30,65*{5,2147483647},24{5,2147483647}" />
                                         <Label RichText="End Date:" FontFamily="Open Sans" Id="2195e2f0-5c7d-a5a0-bbc6-f8205d309d09" Panel.Bounds="150,169,59*{5,2147483647},24{5,2147483647}" />
-                                        <Icon CatalogId="fa-calendar" Id="7a1caf9f-7236-e5b4-8968-394ff770fe53" Panel.Bounds="215,63,26{5,2147483647},26{5,2147483647}" />
-                                        <Icon CatalogId="fa-calendar" Id="6035a7e1-c5b9-22ae-6538-c724d8394b95" Panel.Bounds="215,203,26{5,2147483647},26{5,2147483647}" />
                                         <CheckBox Text="Modified" FontFamily="Open Sans" Id="cfaf399f-5431-392d-53a3-6abb64966d54" Panel.Bounds="0,68,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="Deleted" FontFamily="Open Sans" Id="537fdeb5-1e75-db72-0973-aa11207efef9" Panel.Bounds="0,112,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="Accessed" FontFamily="Open Sans" Id="54ace3f5-cfda-4682-a9ce-cbbd4acd692d" Panel.Bounds="0,154,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="All" FontFamily="Open Sans" Id="b64b2c5b-e984-0e56-e608-85ed4dfd2750" Panel.Bounds="0,197,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="Created" FontFamily="Open Sans" Id="ea0245c4-4d7d-50c9-b436-4c63563ce1cc" Panel.Bounds="0,26,5*{5,2147483647},5*{5,2147483647}" />
-                                        <Label RichText="Search by date range:" FontFamily="Open Sans" Id="ebd077e6-44be-4024-9408-f6b9f655a857" Panel.Bounds="0,0,132*{5,2147483647},24{5,2147483647}" />
+                                        <Label RichText="Search by date range:" FontFamily="Open Sans" Id="ebd077e6-44be-4024-9408-f6b9f655a857" Panel.Bounds="47,4,132*{5,2147483647},24{5,2147483647}" />
+                                        <Icon CatalogId="fa-calendar" Id="42a9b42d-f99d-4a0c-74f1-9207e0c24e49" Panel.Bounds="216,203,18{5,2147483647},18{5,2147483647}">
+                                            <Icon.Click>
+                                                <CommandOpenUrl Url="https://jqueryui.com/datepicker/" Created="03/28/2018 22:55:09" Id="0abfe843-d77f-3506-a0c0-89298217c766" />
+                                            </Icon.Click>
+                                        </Icon>
+                                        <ScreenPartInstance TemplateReference="/Screenparts/Screenpart.screenpart" Id="e26c8562-c218-6b3d-d315-9dcd206b1d44" Panel.Bounds="215,63,0*,0*">
+                                            <ScreenPartInstance.Click>
+                                                <CommandNavigate Screen="/Screen.screen" Created="03/28/2018 22:32:15" Id="92088319-6e9d-9075-30a0-fdf0843384f6">
+                                                    <CommandNavigate.Transition>
+                                                        <NavigateTransition Duration="0" />
+                                                    </CommandNavigate.Transition>
+                                                </CommandNavigate>
+                                            </ScreenPartInstance.Click>
+                                        </ScreenPartInstance>
                                     </Group.Children>
                                 </Group>
                             </Add.Item>
                         </Add>
-                        <Add Property="Panel.Children" Before="8fc446c4-c1f5-4956-a250-87723f001e24" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
                                 <Group GroupName="Group" Id="93c3a608-4db7-4119-b5cf-24cc1aeedf5e" Panel.Bounds="466,179,0*,0*">
                                     <Group.Children>
@@ -139,9 +146,9 @@
                                 </Group>
                             </Add.Item>
                         </Add>
-                        <Add Property="Panel.Children" Before="fd44c535-64c2-43e0-8974-2cf9e1fcee7d" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
                             <Add.Item>
-                                <Group GroupName="Group" Id="944f7b5f-2f99-4bd3-b698-6d7e80d58836" Panel.Bounds="238,436,0*,0*">
+                                <Group GroupName="Group" Id="944f7b5f-2f99-4bd3-b698-6d7e80d58836" Panel.Bounds="253,512,0*,0*">
                                     <Group.Children>
                                         <OptionGroup Id="626771cd-d80f-4994-b053-9e1054c7f13c" Panel.Bounds="98,0,5*{5,2147483647},5*{5,2147483647}">
                                             <OptionGroup.Items>
@@ -155,6 +162,25 @@
                                 </Group>
                             </Add.Item>
                         </Add>
+                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                            <Add.Item>
+                                <Image SourcePath="assets/date picker.png" Id="5a756e54-bcf5-d12a-d5d5-41327a5cae89" Panel.Bounds="341,265,98{5,2147483647},98{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                        <Add Property="Panel.Children" Target="1a0ee1c7-a1f2-cef1-c2a1-d0f568c09612">
+                            <Add.Item>
+                                <Image SourcePath="assets/date picker.png" Id="abbd53ca-08f5-8ce4-10e5-7d17dad3770e" Panel.Bounds="341,407,98{5,2147483647},98{5,2147483647}" />
+                            </Add.Item>
+                        </Add>
+                    </KeyFrame.Operations>
+                </KeyFrame>
+            </Scene.KeyFrames>
+        </Scene>
+        <Scene Title="Disconnected State" StateGroup="8d3e7c94-3e28-5197-17ec-7b77d7da1cfc" ParentScene="8d3e7c94-3e28-5197-17ec-7b77d7da1cfc" Created="03/28/2018 21:47:59" Id="c79f9411-8ab5-eed1-86d9-16146391fa4f">
+            <Scene.KeyFrames>
+                <KeyFrame Id="4af9723c-a568-a8d7-57fd-2dbe0fa390a7">
+                    <KeyFrame.Operations>
+                        <Move To="99,194" Target="879dc1d4-d14f-407a-a8bb-b57006f8b139" />
                     </KeyFrame.Operations>
                 </KeyFrame>
             </Scene.KeyFrames>

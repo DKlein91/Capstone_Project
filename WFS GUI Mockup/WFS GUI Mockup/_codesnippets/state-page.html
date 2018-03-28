@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HomePage</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link href="https://secure-cdn-na.infragistics.com/igniteui/2015.2/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="https://secure-cdn-na.infragistics.com/igniteui/2015.2/latest/css/structure/infragistics.css" rel="stylesheet" />
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://secure-cdn-na.infragistics.com/igniteui/2015.2/latest/js/infragistics.core.js"></script>
+    <script src="https://secure-cdn-na.infragistics.com/igniteui/2015.2/latest/js/infragistics.lob.js"></script>
+
+    <script src="resources/indigo-codegen.js"></script>
+    <link rel="stylesheet" href="resources/indigo-codegen.css">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+
+    <style type="text/css">
+        body {
+          background-color: #FFFFFF;
+        }
+        /* Initial styles */
+        .borderedcontent1 { 
+            background-color: rgba(255,255,255,0);
+            border-color: #666666;
+            border-style: solid;
+            border-width: 0px;
+            border-radius: 0px;
+        }
+        .button1 { 
+            background-color: #f9f9f9;
+            border-color: #b9b9b9;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 3px;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .button2 { 
+            background-color: #c6c6c6;
+            border-color: #b9b9b9;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 3px;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .button3 { 
+            background-color: #f9f9f9;
+            border-color: #b9b9b9;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0px;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .checkbox1 { 
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .content1 { 
+            overflow: hidden;
+        }
+        .icon1  path { 
+            fill: #666666;
+        }
+        .label1 { 
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+            white-space: pre;
+            overflow-y: hidden;
+        }
+        .label2 { 
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+            white-space: pre;
+        }
+        .label3 { 
+            text-align: center;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #282828;
+            white-space: pre;
+        }
+        .radiobutton1 { 
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .radiobutton1 > input { 
+            font-size: 13px;
+        }
+        .rectangle1 { 
+            background-color: #ffffff;
+            border-color: #000000;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0px;
+        }
+        .textbox1 { 
+            background-color: #ffffff;
+            border-color: #b9b9b9;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            color: #282828;
+        }
+        .textbox2 { 
+            background-color: #ffffff;
+            border-color: #b9b9b9;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 13px;
+            font-style: italic;
+            color: #282828;
+        }
+        .title1 { 
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 34px;
+            font-weight: bold;
+            color: #282828;
+            white-space: pre;
+        }
+        #borderedcontent1 { 
+            height: 18px;
+            width: 18px;
+        }
+        #button1 { 
+            display: block;
+            left: 360px;
+            top: 490px;
+            width: 80px;
+            height: 35px;
+            position: absolute;
+        }
+        #button2 { 
+            display: block;
+            left: 19px;
+            top: 546px;
+            width: 114px;
+            height: 35px;
+            position: absolute;
+        }
+        #button3 { 
+            display: block;
+            left: 667px;
+            top: 546px;
+            width: 114px;
+            height: 35px;
+            position: absolute;
+        }
+        #button4 { 
+            display: block;
+            left: 38px;
+            top: 81px;
+            width: 146px;
+            height: 26px;
+            position: absolute;
+        }
+        #checkbox1 { 
+            display: block;
+            left: 0px;
+            top: 68px;
+            position: absolute;
+        }
+        #checkbox2 { 
+            display: block;
+            left: 0px;
+            top: 112px;
+            position: absolute;
+        }
+        #checkbox3 { 
+            display: block;
+            left: 0px;
+            top: 154px;
+            position: absolute;
+        }
+        #checkbox4 { 
+            display: block;
+            left: 0px;
+            top: 197px;
+            position: absolute;
+        }
+        #checkbox5 { 
+            display: block;
+            left: 0px;
+            top: 26px;
+            position: absolute;
+        }
+        #content1 { 
+            height: 600px;
+            width: 800px;
+            position: relative;
+        }
+        #group1 { 
+            display: block;
+            left: 125px;
+            top: 179px;
+            width: 267px;
+            height: 223px;
+            position: absolute;
+        }
+        #group2 { 
+            display: block;
+            left: 466px;
+            top: 179px;
+            width: 221px;
+            height: 24px;
+            position: absolute;
+        }
+        #group3 { 
+            display: block;
+            left: 466px;
+            top: 235px;
+            width: 221px;
+            height: 23px;
+            position: absolute;
+        }
+        #group4 { 
+            display: block;
+            left: 466px;
+            top: 299px;
+            width: 221px;
+            height: 122px;
+            position: absolute;
+        }
+        #group5 { 
+            display: block;
+            left: 238px;
+            top: 436px;
+            width: 103px;
+            height: 11px;
+            position: absolute;
+        }
+        #icon1 { 
+            display: block;
+            left: 708px;
+            top: 550px;
+            width: 26px;
+            height: 26px;
+            position: absolute;
+        }
+        #icon2 { 
+            display: block;
+            left: 249px;
+            top: 205px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+        }
+        #image1 { 
+            display: block;
+            left: 0px;
+            top: 7px;
+            width: 155px;
+            height: 135px;
+            position: absolute;
+        }
+        #label1 { 
+            display: block;
+            left: 147px;
+            top: 30px;
+            height: 24px;
+            position: absolute;
+        }
+        #label2 { 
+            display: block;
+            left: 150px;
+            top: 169px;
+            height: 24px;
+            position: absolute;
+        }
+        #label3 { 
+            display: block;
+            left: 47px;
+            top: 4px;
+            height: 24px;
+            position: absolute;
+        }
+        #label4 { 
+            display: block;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+        }
+        #label5 { 
+            display: block;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+        }
+        #label6 { 
+            display: block;
+            left: 303px;
+            top: 128px;
+            position: absolute;
+        }
+        #label7 { 
+            display: block;
+            left: 0px;
+            top: 6px;
+            position: absolute;
+        }
+        #popupcalender { 
+            display: block;
+            left: 0px;
+            top: 0px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+        }
+        #radiobutton1 { 
+            display: block;
+            left: 6px;
+            top: 9px;
+            position: absolute;
+        }
+        #radiobutton2 { 
+            display: block;
+            left: 98px;
+            top: 0px;
+            position: absolute;
+        }
+        #rectangle1 { 
+            display: block;
+            left: 0px;
+            top: 0px;
+            width: 221px;
+            height: 122px;
+            position: absolute;
+        }
+        #screenpartinstance1 { 
+            display: block;
+            left: 215px;
+            top: 63px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+        }
+        #textbox1 { 
+            display: block;
+            left: 120px;
+            top: 60px;
+            width: 120px;
+            position: absolute;
+        }
+        #textbox2 { 
+            display: block;
+            left: 120px;
+            top: 200px;
+            width: 120px;
+            position: absolute;
+        }
+        #textbox3 { 
+            display: block;
+            left: 0px;
+            top: 19px;
+            width: 221px;
+            position: absolute;
+        }
+        #textbox4 { 
+            display: block;
+            left: 0px;
+            top: 18px;
+            width: 221px;
+            position: absolute;
+        }
+        #textbox5 { 
+            display: block;
+            left: 7px;
+            top: 46px;
+            width: 208px;
+            position: absolute;
+        }
+        #title1 { 
+            display: block;
+            left: 223px;
+            top: 51px;
+            position: absolute;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="content1" class="content1" name="screen">
+      <img id="image1" src="../assets/WFS%20LOGO%202.png"  />
+      <button id="button1" class="button1">Search</button>
+      <button id="button2" class="button2">Select Inspector </button>
+      <button id="button3" class="button2">Settings </button>
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="none" id="icon1" viewBox="0 0 26 26" preserveAspectRatio="none" class="icon1">
+        <path stroke-width="0" d="M21.59 8.234l2.547-2.547-3.824-3.824-2.547 2.547-1.922-.641v-3.77h-5.688v3.77l-1.922.641-2.547-2.547-3.824 3.824 2.547 2.547-.641 1.922h-3.77v5.688h3.77l.641 1.922-2.547 2.547 3.824 3.824 2.547-2.547 1.922.641v3.77h5.688v-3.77l1.922-.641 2.547 2.547 3.824-3.824-2.547-2.547.641-1.922h3.77v-5.688h-3.77zm3.598 6.797h-3.543l-.984 2.953 2.328 2.328-2.676 2.676-2.328-2.328-2.953.984v3.543h-4.063v-3.543l-2.953-.984-2.328 2.328-2.676-2.676 2.328-2.328-.984-2.953h-3.543v-4.063h3.543l.984-2.953-2.328-2.328 2.676-2.676 2.328 2.328 2.953-.984v-3.543h4.063v3.543l2.953.984 2.328-2.328 2.676 2.676-2.328 2.328.984 2.953h3.543zm0 0M13 10.156c-1.566 0-2.844 1.277-2.844 2.844 0 1.566 1.277 2.844 2.844 2.844 1.566 0 2.844-1.277 2.844-2.844 0-1.566-1.277-2.844-2.844-2.844zm0 4.875c-1.121 0-2.031-.91-2.031-2.031s.91-2.031 2.031-2.031 2.031.91 2.031 2.031-.91 2.031-2.031 2.031zm0 0"></path>
+      </svg>
+      <div id="group1" >
+        <input type="textbox" id="textbox1" value="dd/mm/yyyy" class="textbox1"/>
+        <input type="textbox" id="textbox2" value="dd/mm/yyyy" class="textbox1"/>
+        <span id="label1" class="label1">Start Date:</span>
+        <span id="label2" class="label1">End Date:</span>
+        <span id="checkbox1" class="checkbox1">
+          <input id="checkbox1_input" type="checkbox" />
+          <label for="checkbox1_input">Modified</label>
+        </span>
+        <span id="checkbox2" class="checkbox1">
+          <input id="checkbox2_input" type="checkbox" />
+          <label for="checkbox2_input">Deleted</label>
+        </span>
+        <span id="checkbox3" class="checkbox1">
+          <input id="checkbox3_input" type="checkbox" />
+          <label for="checkbox3_input">Accessed</label>
+        </span>
+        <span id="checkbox4" class="checkbox1">
+          <input id="checkbox4_input" type="checkbox" />
+          <label for="checkbox4_input">All</label>
+        </span>
+        <span id="checkbox5" class="checkbox1">
+          <input id="checkbox5_input" type="checkbox" />
+          <label for="checkbox5_input">Created</label>
+        </span>
+        <span id="label3" class="label1">Search by date range:</span>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="none" id="icon2" viewBox="0 0 26 26" preserveAspectRatio="none" class="icon1">
+          <path stroke-width="0" d="M2.785 24.145h4.18v-4.18h-4.18zm5.109 0h4.641v-4.18h-4.641zm-5.109-5.109h4.18v-4.641h-4.18zm5.109 0h4.641v-4.641h-4.641zm-5.109-5.57h4.18v-4.18h-4.18zm10.68 10.68h4.641v-4.18h-4.641zm-5.57-10.68h4.641v-4.18h-4.641zm11.141 10.68h4.18v-4.18h-4.18zm-5.57-5.109h4.641v-4.641h-4.641zm-5.109-12.535v-4.18c0-.125-.043-.234-.137-.324-.09-.094-.199-.141-.324-.141h-.93c-.125 0-.234.047-.328.141-.09.09-.137.199-.137.324v4.18c0 .125.047.234.137.328.094.09.203.137.328.137h.93c.125 0 .234-.047.324-.137.094-.094.137-.203.137-.328zm10.68 12.535h4.18v-4.641h-4.18zm-5.57-5.57h4.641v-4.18h-4.641zm5.57 0h4.18v-4.18h-4.18zm.465-6.965v-4.18c0-.125-.047-.234-.137-.324-.094-.094-.203-.141-.328-.141h-.93c-.125 0-.234.047-.324.141-.094.09-.137.199-.137.324v4.18c0 .125.043.234.137.328.09.09.199.137.324.137h.93c.125 0 .234-.047.328-.137.09-.094.137-.203.137-.328zm5.57-.93v18.574c0 .5-.184.938-.551 1.305-.367.367-.801.551-1.305.551h-20.43c-.504 0-.938-.184-1.305-.551-.367-.367-.551-.805-.551-1.305v-18.574c0-.5.184-.937.551-1.305.367-.367.801-.551 1.305-.551h1.859v-1.395c0-.637.227-1.184.68-1.637.457-.457 1-.684 1.641-.684h.93c.637 0 1.184.227 1.637.684.457.453.684 1 .684 1.637v1.395h5.57v-1.395c0-.637.227-1.184.684-1.637.453-.457 1-.684 1.637-.684h.93c.641 0 1.184.227 1.641.684.453.453.68 1 .68 1.637v1.395h1.859c.504 0 .938.184 1.305.551.367.367.551.805.551 1.305z"></path>
+        </svg>
+        <div id="screenpartinstance1" class="">
+          
+          
+          <div id="borderedcontent1" class="borderedcontent1" style="width:100%;height:100%;overflow:hidden;box-sizing:border-box">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="none" id="popupcalender" viewBox="0 0 26 26" preserveAspectRatio="none" class="icon1">
+              <path stroke-width="0" d="M2.785 24.145h4.18v-4.18h-4.18zm5.109 0h4.641v-4.18h-4.641zm-5.109-5.109h4.18v-4.641h-4.18zm5.109 0h4.641v-4.641h-4.641zm-5.109-5.57h4.18v-4.18h-4.18zm10.68 10.68h4.641v-4.18h-4.641zm-5.57-10.68h4.641v-4.18h-4.641zm11.141 10.68h4.18v-4.18h-4.18zm-5.57-5.109h4.641v-4.641h-4.641zm-5.109-12.535v-4.18c0-.125-.043-.234-.137-.324-.09-.094-.199-.141-.324-.141h-.93c-.125 0-.234.047-.328.141-.09.09-.137.199-.137.324v4.18c0 .125.047.234.137.328.094.09.203.137.328.137h.93c.125 0 .234-.047.324-.137.094-.094.137-.203.137-.328zm10.68 12.535h4.18v-4.641h-4.18zm-5.57-5.57h4.641v-4.18h-4.641zm5.57 0h4.18v-4.18h-4.18zm.465-6.965v-4.18c0-.125-.047-.234-.137-.324-.094-.094-.203-.141-.328-.141h-.93c-.125 0-.234.047-.324.141-.094.09-.137.199-.137.324v4.18c0 .125.043.234.137.328.09.09.199.137.324.137h.93c.125 0 .234-.047.328-.137.09-.094.137-.203.137-.328zm5.57-.93v18.574c0 .5-.184.938-.551 1.305-.367.367-.801.551-1.305.551h-20.43c-.504 0-.938-.184-1.305-.551-.367-.367-.551-.805-.551-1.305v-18.574c0-.5.184-.937.551-1.305.367-.367.801-.551 1.305-.551h1.859v-1.395c0-.637.227-1.184.68-1.637.457-.457 1-.684 1.641-.684h.93c.637 0 1.184.227 1.637.684.457.453.684 1 .684 1.637v1.395h5.57v-1.395c0-.637.227-1.184.684-1.637.453-.457 1-.684 1.637-.684h.93c.641 0 1.184.227 1.641.684.453.453.68 1 .68 1.637v1.395h1.859c.504 0 .938.184 1.305.551.367.367.551.805.551 1.305z"></path>
+            </svg>
+          </div>
+          
+        </div>
+      </div>
+      <div id="group2" >
+        <input type="textbox" id="textbox3" value="Filename " class="textbox1"/>
+        <span id="label4" class="label2">Search for a specific file:</span>
+      </div>
+      <div id="group3" >
+        <input type="textbox" id="textbox4" value="Username" class="textbox1"/>
+        <span id="label5" class="label2">Search for a specific user:</span>
+      </div>
+      <span id="title1" class="title1">WINDOWS FORENSICS SUITE</span>
+      <span id="label6" class="label3">Search Criteria:<br>(All search fields are optional)</span>
+      <div id="group4" >
+        <div id="rectangle1" class="rectangle1"></div>
+        <span id="radiobutton1" class="radiobutton1">
+          <input type="radio" name="radiobutton1" value="option1" checked>Live System</input>
+          <input type="radio" name="radiobutton1" value="option2">System Image</input>
+        </span>
+        <button id="button4" class="button3">Select System Image</button>
+        <input type="textbox" id="textbox5" value="(Selected System Image)" class="textbox2"/>
+      </div>
+      <div id="group5" >
+        <span id="radiobutton2" class="radiobutton1">
+          <input type="radio" name="radiobutton2" value="option3" checked>Date</input>
+          <input type="radio" name="radiobutton2" value="option4">Filename</input>
+          <input type="radio" name="radiobutton2" value="option5">Username</input>
+        </span>
+        <span id="label7" class="label2">Sort results by:</span>
+      </div>
+    </div>
+    <script type="text/javascript">
+      "use strict";
+
+      $(document).ready(function () {
+          // Go to first state
+          start();
+      });
+
+      // States
+      function start() {
+          // Setup new interactions
+          $("#icon2").off('click').click(function() {window.open("https://jqueryui.com/datepicker/", "_blank")});
+          // Overwrite Body class to Execute the interaction that takes to this new state
+          $("body")[0].className = "start";
+      }
+    </script>
+  </body>
+</html>

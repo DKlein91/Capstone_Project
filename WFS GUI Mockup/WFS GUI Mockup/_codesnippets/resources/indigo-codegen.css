@@ -1,0 +1,167 @@
+/* Indigo Codegen common styles */
+
+input:disabled, button:disabled, .comboBox.disabled, .comboBox-dropdown.disabled {
+    border-color: #D9D9D9!important;
+}
+
+button {
+    line-height: 100%!important;
+    overflow: hidden;
+}
+button span { /* Multiline buttons */
+    display: block;
+    line-height: normal;
+}
+button span:first-child { /* Multiline buttons */
+    white-space: nowrap;
+}
+
+input {
+    border-style: solid;
+}
+
+input[type=radio] {
+    width: 0.8em;
+    height: 0.8em;
+}
+
+/* Specific control styles */
+
+/* List/Repeater */
+div.list {
+   box-sizing: border-box;
+   line-height: 0;
+   overflow-x: hidden;
+   overflow-y: auto;
+}
+div.list.horizontal {
+   white-space: nowrap;
+   overflow-x: auto;
+   overflow-y: hidden;
+}
+div.list > div {
+   position: relative;
+   box-sizing: border-box;
+}
+div.list.horizontal > div {
+   vertical-align: top;
+   display: inline-block;
+   width: 100px;   /* default */
+   height: 100%;
+}
+div.list:not(.horizontal) > div {
+   display: block;
+   height: 43px; /* default */
+   width: 100%;
+}
+div.list > div {
+   line-height: initial;
+}
+
+
+/* Tabs */
+.ui-tabs .ui-tabs-panel {
+   position: relative;
+   border-width: 0px;
+}
+.ui-tabs .ui-tabs-nav {
+    background: none;
+}
+.ui-tabs .ui-tabs-nav li.ui-state-default {
+    background: none;
+}
+
+/* Grid */
+.ui-iggrid table {
+    border-collapse: collapse;
+}
+.ui-iggrid th, .ui-iggrid td {
+    box-sizing: border-box;
+    border-color: #dadada;
+}
+.ui-iggrid > table > tbody td {
+    padding: 0;
+    overflow-y: hidden;
+}
+.ui-iggrid > table > tbody td > div {
+    box-sizing: border-box;
+    padding: 4px;
+}
+
+/* Tree */
+.ui-igtree-node img {
+    width:1em;
+    height:1em;
+}
+
+/* Stencils */
+.webcam .controls {
+   height: 50px;
+   width: 100%;
+   position: absolute;
+   bottom: 0;
+   background-color: rgba(185,185,185,.8);
+}
+
+.webcam .icon {
+   width: 38px;
+   margin: 13px auto;
+}
+
+.videoplayerStencil {
+   border: 1px solid #CDCDCD;
+}
+
+.videoplayerStencil .controls {
+   height: 50px;
+   position: absolute;
+   left: 0px;
+   bottom: 0px;
+   right: 0px;
+   background-color: #f0f0f0;
+   overflow: hidden;
+}
+.videoplayerStencil ul {
+   display: table;
+   table-layout: fixed;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+   list-style: none;
+}
+
+.videoplayerStencil .controls .icons {
+    width: 25px;
+    height: 25px;
+    padding: 10px;
+}
+.videoplayerStencil .controls li {
+    display: table-cell;
+}
+
+/* Bootstrap styles */
+h1, h2, h3, h4, h5 {
+    margin: 0;
+}
+.row {
+    overflow: hidden;
+    padding-bottom : 15px;
+}
+.row > div {
+    min-height: 10px;
+}
+.container-fluid {
+    padding: 0 15px 0 15px ;
+}
+.bs-cell > * {
+    display: inline-block;
+}
+.horiz-stretch {
+    width: 100%;
+}
+.horiz-center {
+   text-align: center;
+}
+.horiz-right {
+    text-align: right;
+}
