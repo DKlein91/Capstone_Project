@@ -56,7 +56,7 @@ CACHE_MAGIC_NT6_4 = 0x30
 bad_entry_data = 'N/A'
 g_verbose = False
 g_usebom = False
-output_header  = ["Last Modified", "Last Update", "Path", "File Size", "Exec Flag"]
+output_header  = ["Last Modified", "Path"]
 
 # Date Formats
 DATE_MDY = "%m/%d/%y %H:%M:%S"
@@ -385,10 +385,10 @@ def read_win10_entries(bin_data, ver_magic, creators_update=False):
             temp_datetime = int(filetime, 16)
             test_datething = filetime_to_dt(temp_datetime)
             last_mod_date = test_datething
-        except ValueError:
+        except Exception:
             last_mod_date = bad_entry_data
 
-#        print(last_mod_date)
+        print(last_mod_date, path)
         row = [last_mod_date, path]
         entry_list.append(row)
         b_data = b_data[8:]
@@ -505,8 +505,7 @@ def main(argv=[]):
     global g_usebom
 
     parser = argparse.ArgumentParser(description="Parses Application Compatibilty Shim Cache data")
-    parser.add_argument("-l", "--local", action="store_true", help="Reads data from local system")
-    parser.add_argument("-o", "--out", metavar="PATH", help="Writes to CSV data to a file in PATH and prints. If no PATH specified, then no CSV")
+    parser.add_argument("-l", "--local", action="store_true", help="Reads data from local system and outputs it into command line and a CSV file at the directory specified.")
 
     action1 = sys.argv[1]
 
