@@ -253,35 +253,17 @@ if __name__ == "__main__":
     MFTMirror = drive.read(1024)
     logfile = drive.read(1024)
 
-    MFTRecordName = MFTRecord[0:4]
-    MFTOffsetToUpdateSequence = struct.unpack("<h", MFTRecord[4:6])[0]
-    NumEntriesInFixupArray = struct.unpack("<h", MFTRecord[6:8])[0]
     mftLogfileSequenceNumber = struct.unpack("<q",MFTRecord[8:16])[0]
     mftSequenceNumber = struct.unpack("<h",MFTRecord[16:18])[0]
     mftHardLinkCount = struct.unpack("<h",MFTRecord[18:20])[0]
     firstAttOffset = struct.unpack("<h",MFTRecord[20:22])[0]
-    mftUsageFlags = MFTRecord[22:24]
-    mftRecordLogicalSize = struct.unpack("<i",MFTRecord[24:28])[0]
-    mftRecordPhysicalSize = struct.unpack("<i",MFTRecord[28:32])[0]
-    mftParentDirectoryRecordNumber = struct.unpack("<q",MFTRecord[32:40])[0]
-    mftNextAttributeID = struct.unpack("<h",MFTRecord[40:42])[0]
     mftRecordNumber = struct.unpack("<i",MFTRecord[44:48])[0]
-    mftnext = MFTRecord[56:58]
 
-    print("MFT Name: " + str(MFTRecordName))
-    print("Offset/Update Sequence: " + str(MFTOffsetToUpdateSequence))
-    print("Number of Entries in the Fixup Array: " + str(NumEntriesInFixupArray))
     print("Logfile Sequence Number: " + str(mftLogfileSequenceNumber))
     print("Sequence Number: " + str(mftSequenceNumber))
     print("Hard Link Count: " + str(mftHardLinkCount))
     print("First Attribute Offset: " + str(firstAttOffset))
-    print("Usage Flags: " + str(mftUsageFlags))
-    print("Record Logical Size: " + str(mftRecordLogicalSize))
-    print("Record Physical Size: " + str(mftRecordPhysicalSize))
-    print("Parent Directory Record Number: " + str(mftParentDirectoryRecordNumber))
-    print("Next Attribute ID: " + str(mftNextAttributeID))
     print("MFT Record Number: " + str(mftRecordNumber))
-    print(MFTRecord[firstAttOffset:firstAttOffset+22])
 
    
     #$Standard_Information Header
@@ -396,42 +378,46 @@ if __name__ == "__main__":
     print("Initialized Size of Content: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+256:firstAttOffset+264])[0]))
     print("Data Run: " + str(MFTRecord[firstAttOffset+264:firstAttOffset+200+attLength]))
 
+    
     content = MFTRecord[firstAttOffset+264:firstAttOffset+200+attLength]
-    dataRunHeader = str(binascii.hexlify(content[:1]))
-    offsetBytes = int(dataRunHeader[2])
-    lengthBytes = int(dataRunHeader[3])
 
-    length = int(binascii.hexlify(content[lengthBytes:0:-1]),16)    
-    offset = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]),16)
+    datarun = list()
 
-    print("Length: " + str(length))
-    print("Offset: " + str(offset))
-    #print("Data Run Start(?): " + str(MFTRecord[firstAttOffset + attLength+200:]))
-    attOffset = firstAttOffset + attLength+200
-    print("\nBitmap Header: ")
-    print("Attribute Type: " + str(MFTRecord[attOffset:attOffset+4]))
-    print("Attribute Length: " + str(struct.unpack("<i",MFTRecord[attOffset+4:attOffset+8])[0]))
-    print("Attribute Resident: " + str(MFTRecord[attOffset+8:attOffset+9]))
-    print("Attribute Name Length: " + str(MFTRecord[attOffset+9:attOffset+10]))
-    print("Attribute Name Offset: " + str(struct.unpack("<h",MFTRecord[attOffset+10:attOffset+12])[0]))
-    print("Attribute Flags: " + str(MFTRecord[attOffset+12:attOffset+14]))
-    print("Attribute ID: " + str(struct.unpack("<h",MFTRecord[attOffset+14:attOffset+16])[0]))
-    print("Starting VCN: " + str(struct.unpack("<q",MFTRecord[attOffset+16:attOffset+24])[0]))
-    print("Last VCN: " + str(struct.unpack("<q",MFTRecord[attOffset+24:attOffset+32])[0]))
-    print("Offset To Data Runs: " + str(struct.unpack("<h",MFTRecord[attOffset+32:attOffset+34])[0]))
-    print("Compression Unit Size: " + str(struct.unpack("<h",MFTRecord[attOffset+34:attOffset+36])[0]))
-    print("Allocated Size of Content: " + str(struct.unpack("<q",MFTRecord[attOffset+40:attOffset+48])[0]))
-    print("Actual Size of Content: " + str(struct.unpack("<q",MFTRecord[attOffset+48:attOffset+56])[0]))
-    print("Initialized Size of Content: " + str(struct.unpack("<q",MFTRecord[attOffset+56:attOffset+64])[0]))
-    #print("Rest of Content: " + str(MFTRecord[attOffset+80:]))
+    while content[:1] != b'\x00':
 
-    """
-    MFTRecordLocation,logfileSize = ParseLogfileMFTRecord(logfileMFTRecord)
+        dataRunHeader = str(binascii.hexlify(content[:1]))
+        offsetBytes = int(dataRunHeader[2])
+        lengthBytes = int(dataRunHeader[3])
+
+        x = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]),16)
+        signCheck = '0x7F'
+        signNeg = '0x10'
+        for i in range(0, lengthBytes):
+            signCheck += 'FF'
+            signNeg += '00'
+        y = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]), 16)
+        if x > int(signCheck, 16):
+            x -= int(signNeg, 16)
+
+        print(x)
+
+        length = int(binascii.hexlify(content[lengthBytes:0:-1]),16)    
+        offset = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]),16)
+
+        print("Length: " + str(length) + ", " + str(content[lengthBytes:0:-1]))
+        print("Offset: " + str(offset)+ ", " + str(content[lengthBytes+offsetBytes:lengthBytes:-1]))
+        datarun.append((length, offset))
+        content = content[1 + offsetBytes + lengthBytes:]
 
     drive.seek(0)
-    drive.seek(bytesPerSector * sectorsPerCluster * logfileLocation)
-    logfile = drive.read(bytesPerSector * sectorsPerCluster * logfileSize)
-
-    logfilePageSize = struct.unpack("<i",logfile[20:24])[0]
-
-    ParseLogfile(logfile, logfilePageSize)"""
+    driveLCNLocation = bytesPerSector * sectorsPerCluster * datarun[0][1]
+    drive.seek(driveLCNLocation)
+    n = 51232
+    for i in range( 0, len(datarun)):
+        testdatarun = drive.read(n)
+        driveLCNLocation += datarun[i][0]
+        drive.seek(0)
+        drive.seek(driveLCNLocation - n)
+        while "\xff\xff\xff\xff" in testdatarun:
+            print(testdatarun[:testdatarun.index(b"\xff\xff\xff\xff") + 4])
+    
