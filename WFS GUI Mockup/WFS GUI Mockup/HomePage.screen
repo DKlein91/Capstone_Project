@@ -74,7 +74,7 @@
                                         <TextBox Text="24/12/2012" FontFamily="Open Sans" Id="0b0bd026-801c-c891-0faf-9dad923224c3" Panel.Bounds="120,60,120{5,2147483647},5*{5,2147483647}" />
                                         <TextBox Text="24/12/2012" FontFamily="Open Sans" Id="ae2d8f43-1a96-ab5a-de51-6e50d468d831" Panel.Bounds="120,200,120{5,2147483647},5*{5,2147483647}" />
                                         <Label RichText="Start Date:" FontFamily="Open Sans" Id="484b5d7e-7290-d61b-70ee-40d99b8890ac" Panel.Bounds="147,30,65*{5,2147483647},24{5,2147483647}" />
-                                        <Label RichText="End Date:" FontFamily="Open Sans" Id="2195e2f0-5c7d-a5a0-bbc6-f8205d309d09" Panel.Bounds="150,169,59*{5,2147483647},24{5,2147483647}" />
+                                        <Label RichText="End Date:" FontFamily="Open Sans" Id="2195e2f0-5c7d-a5a0-bbc6-f8205d309d09" Panel.Bounds="147,172,59*{5,2147483647},24{5,2147483647}" />
                                         <CheckBox Text="Modified" FontFamily="Open Sans" Id="cfaf399f-5431-392d-53a3-6abb64966d54" Panel.Bounds="0,68,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="Deleted" FontFamily="Open Sans" Id="537fdeb5-1e75-db72-0973-aa11207efef9" Panel.Bounds="0,112,5*{5,2147483647},5*{5,2147483647}" />
                                         <CheckBox Text="Accessed" FontFamily="Open Sans" Id="54ace3f5-cfda-4682-a9ce-cbbd4acd692d" Panel.Bounds="0,154,5*{5,2147483647},5*{5,2147483647}" />
@@ -86,7 +86,7 @@
                                                 <CommandOpenUrl Url="https://jqueryui.com/datepicker/" Created="03/28/2018 22:55:09" Id="0abfe843-d77f-3506-a0c0-89298217c766" />
                                             </Icon.Click>
                                         </Icon>
-                                        <ScreenPartInstance TemplateReference="/Screenparts/Screenpart.screenpart" Id="e26c8562-c218-6b3d-d315-9dcd206b1d44" Panel.Bounds="215,63,0*,0*">
+                                        <ScreenPartInstance TemplateReference="/Screenparts/Screenpart.screenpart" Id="e26c8562-c218-6b3d-d315-9dcd206b1d44" Panel.Bounds="216,63,0*,0*">
                                             <ScreenPartInstance.Click>
                                                 <CommandNavigate Screen="/Screen.screen" Created="03/28/2018 22:32:15" Id="92088319-6e9d-9075-30a0-fdf0843384f6">
                                                     <CommandNavigate.Transition>
