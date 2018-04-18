@@ -418,6 +418,7 @@ if __name__ == "__main__":
         driveLCNLocation += datarun[i][0]
         drive.seek(0)
         drive.seek(driveLCNLocation - n)
-        while "\xff\xff\xff\xff" in testdatarun:
-            print(testdatarun[:testdatarun.index(b"\xff\xff\xff\xff") + 4])
+        while b"\xff\xff\xff\xff" in testdatarun and len(testdatarun) > 1000:
+            print(testdatarun[:testdatarun.index(b"\xff\xff\xff\xff")+4])
+            testdatarun = (testdatarun[:testdatarun.index(b"\xff\xff\xff\xff")+4])
     
