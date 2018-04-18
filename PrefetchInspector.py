@@ -1,3 +1,4 @@
+
 ###############################
 #
 #Name:      PrefetchTest1.py 
@@ -30,6 +31,7 @@ import tempfile
 import math
 import csv
 import pathlib
+import numpy
 
 
 class Prefetch(object):
@@ -282,20 +284,43 @@ class Prefetch(object):
         csvSingleRead = open(csvfilename, 'w+')
         csvSingleRead.close()
         csvSingleRead = open(csvfilename, 'r+')
-        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Creation Date', 'Volume Name', 'Serial Number']
+        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Volume Creation Date', 'Volume Serial No', 'Directory Strings', 'Resources Loaded']
         if csvSingleRead.read(30) == '':
             csvSingleHeader = open(csvfilename, 'w')
             single_header = csv.DictWriter(csvSingleHeader, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
             single_header.writeheader()
             csvSingleHeader.close()
-
+        #masterlist = numpy.column_stack((self.executableName, self.timestamps, self.runCount, self.volumesInformationArray, self.directoryStringsArray, self.directoryStringsArray))
         csvSingleWrite = open(csvfilename, 'a')
         single_writer = csv.DictWriter(csvSingleWrite, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
-        single_writer.writerow({'Executable Name':self.executableName, 'Last Executed':self.timestamps[0], 
-                      'Run Count':self.runCount, 'Creation Date':convertTimestamp(self.volCreationTime), 
-                      'Volume Name':self.volumesInformationArray[0].get('Volume Name'), 
-                      'Serial Number':str(self.volumesInformationArray[0].get('Serial Number'))})
-        csvSingleWrite.close()
+        longindex = 0
+
+        argumentdict = dict.fromkeys([])
+        if len(self.directoryStringsArray) > len(self.resources): 
+            longindex = len(self.directoryStringsArray)
+        else:
+            longindex = len(self.resources)
+                
+        for row in range(0, longindex):
+            if(row == 0):
+                argumentdict['Run Count'] = self.runCount
+                argumentdict['Executable Name'] = self.executableName
+            if(len(self.timestamps) > row):
+                argumentdict['Last Executed'] = self.timestamps[row]
+            if(len(self.volumesInformationArray) > row):
+                argumentdict['Volume Name'] = self.volumesInformationArray[row-1].get('Volume Name')
+                argumentdict['Volume Creation Date'] = self.volumesInformationArray[row-1].get('Creation Date')
+                argumentdict['Volume Serial No'] = self.volumesInformationArray[row-1].get('Serial Number')
+            if(len(self.directoryStringsArray[0]) > row):
+                argumentdict['Directory Strings'] = self.directoryStringsArray[0][row]
+            if(len(self.resources) > row):
+                argumentdict['Resources Loaded'] = self.resources[row]
+            print(argumentdict)
+            single_writer.writerow(argumentdict)
+            argumentdict.clear()
+
+
+
 
     def prettyPrint(self):
         # Prints important Prefetch data in a structured format
@@ -483,81 +508,88 @@ def main():
     p.add_argument("-f", "--file", help="Parse a given Prefetch file")
     p.add_argument("-c", "--csv", help="Parse all Prefetch files and output to a csv file in the directory")
     args = p.parse_args()"""
-    action1 = sys.argv[1]
-    if action1 in ['-f', 'file']:
-        if sys.argv[2].endswith(".pf"):
-            if os.path.getsize(args.file) > 0:
-                try:
-                    p = Prefetch(args.file)
-                except Exception as e:
-                    print ("[ - ] {}".format(e))
-                    sys.exit("[ - ] {} could not be parsed".format(args.file))
+    if len(sys.argv) > 1:
+        action1 = sys.argv[1]
+        if action1 in ['-f', 'file']:
+            action2 = sys.argv[2]
+            if sys.argv[2].endswith(".pf"):
+                if os.path.getsize(action2) > 0:
+                    try:
+                        p = Prefetch(action2)
+                    except Exception as e:
+                        print ("[ - ] {}".format(e))
+                        sys.exit("[ - ] {} could not be parsed".format(action2))
 
-                p.prettyPrint()
-            else:
-                print ("[ - ] {}: Zero byte Prefetch file".format(args.file))
+                    p.prettyPrint()
+                else:
+                    print ("[ - ] {}: Zero byte Prefetch file".format(action2))
 
-    if action1 in ['-d', 'directory']:
-        if not (sys.argv[2].endswith("/") or sys.argv[2].endswith("\\")):
-            sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
+        elif action1 in ['-d', 'directory']:
+            action2 = sys.argv[2]
+            if not (action2.endswith("/") or action2.endswith("\\")):
+                sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
 
-        directoryPath = sys.argv[2]
-        if os.path.isdir(directoryPath):
-            for i in os.listdir(directoryPath):
-                if i.endswith(".pf"):
-                    if os.path.getsize(directoryPath + i):
-                        try:
-                            p = Prefetch(directoryPath + i)
-                           # p.csvPrintSingleFile()
-                            p.prettyPrint()
-                        except Exception as e:
-                            print ("[ - ] {} could not be parsed".format(i))
-                    else:
-                        print ("[ - ] Zero-byte Prefetch file")
-    if action1 in ['-e', 'executed']:
-        if not (argv[2].endswith("/") or argv[2].endswith("\\")):
-            sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
-        csvfile = open('indexPrefetch.csv', 'w')
-        fieldNamesIndex = ['Executable Name', 'Last Executed']
-        fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
-        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
-        lnk_writer.writeheader()
-        print ("Execution Time, File Executed")
-        for i in  sortTimestamps(argv[2]):
-            singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
-            single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
-            single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
-            lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
-            print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
+            directoryPath = sys.argv[2]
+            if os.path.isdir(directoryPath):
+                for i in os.listdir(directoryPath):
+                    if i.endswith(".pf"):
+                        if os.path.getsize(directoryPath + i):
+                            try:
+                                p = Prefetch(directoryPath + i)
+                                # p.csvPrintSingleFile()
+                                p.prettyPrint()
+                            except Exception as e:
+                                print ("[ - ] {} could not be parsed".format(i))
+                        else:
+                            print ("[ - ] Zero-byte Prefetch file")
+        elif action1 in ['-e', 'executed']:
+            if not (argv[2].endswith("/") or argv[2].endswith("\\")):
+                sys.exit("\n[ - ] When enumerating a directory, add a trailing slash\n")
+            csvfile = open('indexPrefetch.csv', 'w')
+            fieldNamesIndex = ['Executable Name', 'Last Executed']
+            fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
+            lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+            lnk_writer.writeheader()
+            print ("Execution Time, File Executed")
+            for i in  sortTimestamps(argv[2]):
+                singlefile = open('C:/Test/' + str(i[1])[:-13] + ".csv", 'w' )
+                single_writer = csv.DictWriter(singlefile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesSingle)
+                single_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
+                lnk_writer.writerow({'Executable Name':str(i[1])[:-13], 'Last Executed':convertTimestamp(i[0])})
+                print ("{}, {}".format(convertTimestamp(i[0]), i[1]))
  
-    if action1 in ['-c', 'csv']:
+        elif action1 in ['-c', 'csv']:
+            #fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
+            if not os.path.exists(sys.argv[3]):
+                os.makedirs(sys.argv[3])
+            os.chdir(sys.argv[3])
+            print(os.getcwd())
+            prefPath = sys.argv[2]
+            if os.path.isdir(prefPath):
+                for i in os.listdir(prefPath):
+                    if i.endswith(".pf"):
+                        if os.path.getsize(prefPath + i):
+                            try:
+                                p = Prefetch(prefPath + i)
+                                p.csvPrintSingleFile(sys.argv[3])
+                            except Exception as e:
+                                print ("[ - ] {} could not be parsed".format(i))
+                        else:
+                            print ("[ - ] Zero-byte Prefetch file")
 
-        #fieldNamesSingle = ['Executable Name', 'Last Executed', 'Run Count', 'Volume Name', 'Creation Date', 'Serial Number']
-        if not os.path.exists(sys.argv[3]):
-            os.makedirs(sys.argv[3])
-        os.chdir(sys.argv[3])
-        print(os.getcwd())
-        prefPath = sys.argv[2]
-        if os.path.isdir(prefPath):
-            for i in os.listdir(prefPath):
-                if i.endswith(".pf"):
-                    if os.path.getsize(prefPath + i):
-                        try:
-                            p = Prefetch(prefPath + i)
-                            p.csvPrintSingleFile(sys.argv[3])
-                        except Exception as e:
-                            print ("[ - ] {} could not be parsed".format(i))
-                    else:
-                        print ("[ - ] Zero-byte Prefetch file")
+            csvfile = open('indexPrefetch.csv', 'w')
+            fieldNamesIndex = ['Executable Name', 'Last Executed']
+            lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
+            lnk_writer.writeheader()
 
-        csvfile = open('indexPrefetch.csv', 'w')
-        fieldNamesIndex = ['Executable Name', 'Last Executed']
-        lnk_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldNamesIndex)
-        lnk_writer.writeheader()
+            for i in  sortTimestamps(sys.argv[2]):
+                dt = p.convertTimestamp(i[0])
+                lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':dt})
+        else:
+            print("Incorrect Argument; Accepted Arguments: " + "\n-l \"[Absolute Location of File]\" \n-d \"[Absolute Directory Location]\"\n-e \n-c \"[Absolute Location of File]\" \"[Absolute Output Folder]\"  ")
 
-        for i in  sortTimestamps(sys.argv[2]):
-            dt = p.convertTimestamp(i[0])
-            lnk_writer.writerow({'Executable Name':i[1].encode('utf-8', 'ignore'), 'Last Executed':dt})
+    else:
+        print(" Please Input an argument; Accepted Arguments: " + "\n-l \"[Absolute Location of File]\" \n-d \"[Absolute Directory Location]\"\n-e \n-c \"[Absolute Location of File]\" \"[Absolute Output Folder]\"  ")
 
 if __name__ == '__main__':
     main()
