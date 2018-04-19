@@ -369,7 +369,7 @@ def parse_lnk(filename):
         print(output)
         print(vol_flags)
         output += " [!] Error: unknown volume flags\n"
-        sys.exit(1)
+        #sys.exit(1)
 
     # Remaining path
     rem_path_off_hex = reverse_hex(read_unpack(f,rem_path_off,4))
@@ -460,7 +460,7 @@ if __name__ == "__main__":
                         except:
                             unopenedFiles += 1
     
-#    if(unopenedFiles > 0):
-#        print("\n" + str(unopenedFiles) + " files were not opened.")
+    if(unopenedFiles > 0):
+        print("\n" + str(unopenedFiles) + " files were not opened.")
     csvFile.close()
 
