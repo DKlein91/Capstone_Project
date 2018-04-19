@@ -2,70 +2,6 @@ from io import BytesIO
 import binascii
 import struct
 import datetime
-
-OPDictionary = {
-    0 : "No OP",
-    1 : "Compensation Log Record",
-    2 : "Initialize File Record Segment",
-    3 : "Deallocate File Record Segment",
-    4 : "Write EOF Record Segment",
-    5 : "Create Attribute",
-    6 : "Delete Attribute",
-    7 : "Update Resident Value",
-    8 : "Update Non-Resident Value",
-    9 : "Update Mapping Pairs",
-    10 : "Delete Dirty Clusters",
-    11 : "Set New Attribute Sizes",
-    12 : "Add Index Entry Root",
-    13 : "Delete Index Entry Root",
-    15 : "Add Index Entry Allocation",
-    18 : "Set Index Entry Ven Allocation",
-    19 : "Update File Name Root",
-    20 : "Update File Name Allocation",
-    21 : "Set Bits In Non-Resident Bit Map",
-    22 : "Clear Bits In Non-Resident Bit Map",
-    25 : "Prepare Transaction",
-    26 : "Commit Transaction",
-    27 : "Forget Transaction",
-    28 : "Open Non-Resident Attribute",
-    31 : "Dirty Page Table Dump",
-    32 : "Transaction Table Dump",
-    33 : "Update Record Data Root"
-}
-
-RecordTypeDictionary = {
-    1 : "General",
-    2 : "Checkpoint"
-}
-
-LogfileRecordFlagDictionary = {
-    0 : "Doesn't Cross Current Page",
-    1 : "Crosses Current Page"
-}
-
-def ParseLogfileMFTRecord(record):
-    if(str(record[:4]) != "b'FILE'"):
-        print("This is not a MFT Record!")
-        return
-
-    #MFT Record Header
-    firstAttOffset = struct.unpack("<h",record[20:22])[0]
-
-    attType = struct.unpack("<i",record[firstAttOffset:firstAttOffset+4])[0]
-    attOffset = firstAttOffset
-
-    #Find Data Attribute
-    while(attType != 128):
-        attOffset = attOffset + struct.unpack("<i",record[attOffset+4:attOffset+8])[0]
-        attType = struct.unpack("<i",record[attOffset:attOffset+4])[0]
-
-    attLength = struct.unpack("<i",record[attOffset+4:attOffset+8])[0]
-    attResidentFlag = struct.unpack("<b",record[attOffset+8:attOffset+9])[0]
-
-    logfileLoc,logfileSize = ParseDataAttribute(record[attOffset:attOffset+attLength], attLength)
-
-    return logfileLoc,logfileSize
-
 def ParseDataAttribute(attribute, attLength):
     runlistStartCluster = struct.unpack("<q",attribute[16:24])[0]
     runlistEndCluster = struct.unpack("<q",attribute[24:32])[0]
@@ -89,145 +25,48 @@ def ParseDataRun(content):
 
     return offset,length
 
-def ParseLogfile(logfile, pageSize):
-    #Skip Restart Area of Logfile
-    loggingAreaStart = pageSize * 2
+def ParseStandardInformationHeader(record):
+    attribType = record[:4]
+    lengthFile = struct.unpack("<i", record[4:8])[0]
+    if b"\x00" in record[8:9]:
+        lenStandardAttrib = struct.unpack("<i", record[16:20])[0]
+        offsetStandardAttrib = struct.unpack("<h", record[20:22])[0]
 
-    if(str(logfile[loggingAreaStart:loggingAreaStart + 4]) != "b'RCRD'"):
-        print("This is not a $Logfile page!")
+    return attribType, lengthFile, lenStandardAttrib, offsetStandardAttrib
+ 
+def ParseFileRecord(record):
+    signature = record[:4]
+    if signature != b"FILE":
         return
-    
-    i = 0
-    while True:
-        try:
-            print("Page: " + str(i))
-            ParseLogfilePage(logfile[loggingAreaStart + pageSize*i:loggingAreaStart + pageSize*(i+1)])
-            print()
-            i += 1
-        except:
-            ParseLogfilePage(logfile[loggingAreaStart + pageSize*i:])
-            break
+    print("FILE raw: " + str(record[:48]))
+    offsetToUpdateSequence = struct.unpack("<h", record[4:6])[0]
+    sizeUpdateSequence = struct.unpack("<h", record[6:8])[0]
+    offsetFirstAtt = struct.unpack("<h", record[20:22])[0]
+    flags = struct.unpack("<h", record[22:24])[0]
+    realSizeFILERecord = struct.unpack("<i", record[24:28])[0]
+    allocatedSizeFILERecord = struct.unpack("<i", record[28:32])[0]
+    referenceBaseFILERecord = struct.unpack("<q", record[32:40])[0]
+    numMFTRecord = struct.unpack("<i", record[44:48])[0]
 
-    #Page Header
-    updateSequenceOffset = struct.unpack("<h",logfile[loggingAreaStart+4:loggingAreaStart+6])[0]
-    updateSequenceCount = struct.unpack("<h",logfile[loggingAreaStart+6:loggingAreaStart+8])[0]
-    lastLSN = struct.unpack("<q",logfile[loggingAreaStart+8:loggingAreaStart+16])[0]
-    pageCount = struct.unpack("<h",logfile[loggingAreaStart+20:loggingAreaStart+22])[0]
-    pagePosition = struct.unpack("<h",logfile[loggingAreaStart+22:loggingAreaStart+24])[0]
-    nextRecordOffset = struct.unpack("<h", logfile[loggingAreaStart+24:loggingAreaStart+26])[0]
-    lastEndLSN = struct.unpack("<q", logfile[loggingAreaStart+32:loggingAreaStart+40])[0]
-    updateSequenceValue = struct.unpack("<h",logfile[loggingAreaStart+48:loggingAreaStart+50])[0]
+    print("Offset to UpdSeq: " + str(offsetToUpdateSequence))
+    print("Size UpdSeq: " + str(sizeUpdateSequence))
 
-    print("$Logfile Page Header:")
-    print("Update Sequence Offset: " + str(updateSequenceOffset))
-    print("Update Sequence Count: " + str(updateSequenceCount))
-    print("Last LSN: " + str(lastLSN))
-    print("Page Count: " + str(pageCount))
-    print("Page Position: " + str(pagePosition))
-    print("Next Record Offset: " + str(nextRecordOffset))
-    print("Last End LSN: " + str(lastEndLSN))
-#    print("Update Sequence Value: " + str(updateSequenceValue))
-
-#    print(page)
-
-#    ParseLogfileRecord(logfile[nextRecordOffset:])
-
-#    ParseLogfilePage(logfile[len(logfile)-pageSize*7:])
-
-def ParseLogfilePage(page):
-    if(str(page[:4]) != "b'RCRD'"):
-        print("This is not a $Logfile page!")
-        return
-    
-    #Page Header
-    updateSequenceOffset = struct.unpack("<h",page[4:6])[0]
-    updateSequenceCount = struct.unpack("<h",page[6:8])[0]
-    lastLSN = struct.unpack("<q",page[8:16])[0]
-    pageCount = struct.unpack("<h",page[20:22])[0]
-    pagePosition = struct.unpack("<h",page[22:24])[0]
-    nextRecordOffset = struct.unpack("<h", page[24:26])[0]
-    lastEndLSN = struct.unpack("<q", page[32:40])[0]
-    updateSequenceValue = struct.unpack("<h",page[48:50])[0]
-
-    print("$Logfile Page Header:")
-    print("Update Sequence Offset: " + str(updateSequenceOffset))
-    print("Update Sequence Count: " + str(updateSequenceCount))
-    print("Last LSN: " + str(lastLSN))
-    print("Page Count: " + str(pageCount))
-    print("Page Position: " + str(pagePosition))
-    print("Next Record Offset: " + str(nextRecordOffset))
-    print("Last End LSN: " + str(lastEndLSN))
-#    print("Update Sequence Value: " + str(updateSequenceValue))
-
-#    print(page)
-
-    ParseLogfileRecord(page[64:], nextRecordOffset)
-    
-
-def ParseLogfileRecord(record, offset):
-    #Record Header
-    print(struct.unpack("<h",record[offset+30:offset+32])[0])
-    
-    currentLSN = struct.unpack("<q",record[offset:offset+8])[0]
-    previousLSN = struct.unpack("<q",record[offset+8:offset+16])[0]
-    clientDataLength = struct.unpack("<i",record[offset+24:offset+28])[0]
-    if struct.unpack("<i",record[offset+32:offset+36])[0] in RecordTypeDictionary:
-        recordType = RecordTypeDictionary[struct.unpack("<i",record[offset+32:offset+36])[0]]
-    else:
-        recordType = struct.unpack("<i",record[offset+32:offset+36])[0]
-    if struct.unpack("<H",record[offset+40:offset+42])[0] in LogfileRecordFlagDictionary:
-        flags = LogfileRecordFlagDictionary[struct.unpack("<h",record[offset+40:offset+42])[0]]
-    else:
-        flags = struct.unpack("<H",record[offset+40:offset+42])[0]
-    if struct.unpack("<H",record[offset+48:offset+50])[0] in OPDictionary:
-        redoOP = OPDictionary[struct.unpack("<H",record[offset+48:offset+50])[0]]
-    else:
-        redoOP = struct.unpack("<H",record[offset+48:offset+50])[0]
-    if struct.unpack("<H",record[offset+50:offset+52])[0] in OPDictionary:
-        undoOP = OPDictionary[struct.unpack("<H",record[offset+50:offset+52])[0]]
-    else:
-        undoOP = struct.unpack("<H",record[offset+50:offset+52])[0]
-    redoOffset = struct.unpack("<H",record[offset+52:offset+54])[0]
-    redoLength = struct.unpack("<H",record[offset+54:offset+56])[0]
-    undoOffset = struct.unpack("<H",record[offset+56:offset+58])[0]
-    undoLength = struct.unpack("<H",record[offset+58:offset+60])[0]
-    targetAttribute = struct.unpack("<h",record[offset+60:offset+62])[0]
-    lcnToFollow = struct.unpack("<h",record[offset+62:offset+64])[0]
-    recordOffset = struct.unpack("<H",record[offset+64:offset+66])[0]
-    attributeOffset = struct.unpack("<H",record[offset+66:offset+68])[0]
-    mftClusterIndex = struct.unpack("<h",record[offset+68:offset+70])[0]
-    targetVCN = struct.unpack("<i",record[offset+72:offset+76])[0]
-    targetLCN = struct.unpack("<i",record[offset+80:offset+84])[0]
-    
-    print("\nRecord Header:")
-    print("Current LSN: " + str(currentLSN))
-    print("Previous LSN: " + str(previousLSN))
-    print("Client Data Length: " + str(clientDataLength))
-    print("Record Type: " + str(recordType))
+    print("offset to the first att: " + str(offsetFirstAtt))
     print("Flags: " + str(flags))
-    print("Redo OP: " + str(redoOP))
-    print("Undo OP: " + str(undoOP))
-    print("Redo Offset: " + str(redoOffset))
-    print("Redo Length: " + str(redoLength))
-    print("Undo Offset: " + str(undoOffset))
-    print("Undo Length: " + str(undoLength))
-    print("Target Attribute: " + str(targetAttribute))
-    print("LCN To Follow?: " + str(lcnToFollow))
-    print("Record Offset: " + str(recordOffset))
-    print("Attribute Offset: " + str(attributeOffset))
-    print("MFT Cluster Index: " + str(mftClusterIndex))
-    print("Target VCN: " + str(targetVCN))
-    print("Target LCN: " + str(targetLCN))
+    print("Real size of the FILE Record: " + str(realSizeFILERecord))
+    print("Allocated size of FILE record: " + str(allocatedSizeFILERecord))
+    print("Reference to the base FILE Record: " + str(referenceBaseFILERecord))
+    print("MFT Record Number: " + str(numMFTRecord))
+    print("Eof: " + str(record[offsetFirstAtt:]))
 
-    i = offset
-    findThisLSN = previousLSN
-    while(findThisLSN != struct.unpack("<q",record[i-8:i])[0]):
-        print(struct.unpack("<q",record[i-8:i])[0])
-        i -= 1
-    
-    return i
-    
+    attribType, lengthFile, lenStandardAttrib, offsetStandardAttrib = ParseStandardInformationHeader(record[offsetFirstAtt:])
 
+    print("Attrib Type: " + str(attribType))
+    print("Length of File: " + str(lengthFile))
+    print("Length of Standard Attribute: " + str(lenStandardAttrib))
+    print("Offset of Standard Attribute: " + str(offsetStandardAttrib))
+
+    print("EOF: " + str(record[offsetFirstAtt + lengthFile:]))    
 if __name__ == "__main__":
     drive = open(r"D:\testfile1.img","rb")
 
@@ -377,8 +216,7 @@ if __name__ == "__main__":
     print("Actual Size of Content: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+248:firstAttOffset+256])[0]))
     print("Initialized Size of Content: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+256:firstAttOffset+264])[0]))
     print("Data Run: " + str(MFTRecord[firstAttOffset+264:firstAttOffset+200+attLength]))
-
-    
+       
     content = MFTRecord[firstAttOffset+264:firstAttOffset+200+attLength]
 
     datarun = list()
@@ -414,11 +252,11 @@ if __name__ == "__main__":
     drive.seek(driveLCNLocation)
     n = 51232
     for i in range( 0, len(datarun)):
-        testdatarun = drive.read(n)
+        testdatarun = drive.read(datarun[i][1])
         driveLCNLocation += datarun[i][0]
         drive.seek(0)
         drive.seek(driveLCNLocation - n)
         while b"\xff\xff\xff\xff" in testdatarun and len(testdatarun) > 1000:
-            print(testdatarun[:testdatarun.index(b"\xff\xff\xff\xff")+4])
-            testdatarun = (testdatarun[:testdatarun.index(b"\xff\xff\xff\xff")+4])
+            ParseFileRecord(testdatarun[testdatarun.index(b"FILE"):testdatarun.index(b"\xff\xff\xff\xff")+4])
+            testdatarun = (testdatarun[testdatarun.index(b"\xff\xff\xff\xff")+4:])
     
