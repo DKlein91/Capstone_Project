@@ -66,9 +66,23 @@ def ParseFileRecord(record):
     print("Length of Standard Attribute: " + str(lenStandardAttrib))
     print("Offset of Standard Attribute: " + str(offsetStandardAttrib))
 
-    print("EOF: " + str(record[offsetFirstAtt + lengthFile:]))    
+    print("EOF: " + str(record[offsetFirstAtt + lengthFile:]))   
+    
+def fileNameGrabber(record):
+    try:
+        if b"\x10\x00\x00\x00" in record:
+#            zeroethLength = record.index(b"\x10\x00\x00\x00")
+            record = record[record.index(b"\x10\x00\x00\x00"):]
+            standardLength = struct.unpack("<i", record[4:8])[0]
+            SecondLength = struct.unpack("<i", record[standardLength+4:standardLength+8])[0]
+            nameLength = struct.unpack("<B", record[standardLength+SecondLength-16:standardLength+SecondLength-15])[0] * 2
+            name = record[standardLength + SecondLength-22:standardLength+SecondLength].decode('utf-16')
+            print(name)
+    except Exception as e: 
+        return
+
 if __name__ == "__main__":
-    drive = open(r"D:\testfile1.img","rb")
+    drive = open(r"\\.\C:","rb")
 
     bpb = drive.read(84)
 
@@ -164,7 +178,8 @@ if __name__ == "__main__":
     #$File_Name Header
     print("\n$File_Name Header")
     print("Attribute Type: " + str(MFTRecord[firstAttOffset+96:firstAttOffset+100]))
-    print("Attribute Length: " + str(struct.unpack("<i",MFTRecord[firstAttOffset+100:firstAttOffset+104])[0]))
+    testLength = struct.unpack("<i",MFTRecord[firstAttOffset+100:firstAttOffset+104])[0]
+    print("Attribute Length: " + str(testLength))
     print("Attribute Resident: " + str(MFTRecord[firstAttOffset+104:firstAttOffset+105]))
     print("Attribute Name Length: " + str(struct.unpack("<b",MFTRecord[firstAttOffset+105:firstAttOffset+106])[0]))
     print("Attribute Name Offset: " + str(struct.unpack("<h",MFTRecord[firstAttOffset+106:firstAttOffset+108])[0]))
@@ -175,28 +190,14 @@ if __name__ == "__main__":
 
     print("\n$File_Name")
 
-    fnCreateDateOffset = struct.unpack("<q",MFTRecord[firstAttOffset+128:firstAttOffset+136])[0]
-    fnModifiedDateOffset = struct.unpack("<q",MFTRecord[firstAttOffset+136:firstAttOffset+144])[0]
-    fnMFTModifiedDateOffset = struct.unpack("<q",MFTRecord[firstAttOffset+144:firstAttOffset+152])[0]
-    fnAccessedDateOffset = struct.unpack("<q",MFTRecord[firstAttOffset+152:firstAttOffset+160])[0]
-
-    fnDateCreated = startDate + datetime.timedelta(microseconds=fnCreateDateOffset/10)
-    fnDateModified = startDate + datetime.timedelta(microseconds=fnModifiedDateOffset/10)
-    fnDateMFTModified = startDate + datetime.timedelta(microseconds=fnMFTModifiedDateOffset/10)
-    fnDateAccessed = startDate + datetime.timedelta(microseconds=fnAccessedDateOffset/10)
-
     print("MFT Parent Directory: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+120:firstAttOffset+128])[0]))
-    print("File Created: " + str(fnDateCreated))
-    print("File Modified: " + str(fnDateModified))
-    print("File MFT Modified: " + str(fnDateMFTModified))
-    print("File Accessed: " + str(fnDateAccessed))
     print("Logical File Size: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+160:firstAttOffset+168])[0]))
     print("Physical File Size: " + str(struct.unpack("<q",MFTRecord[firstAttOffset+168:firstAttOffset+176])[0]))
     print("Flags: " + str(MFTRecord[firstAttOffset+176:firstAttOffset+180]))
     print("Extended Attributes: " + str(MFTRecord[firstAttOffset+180:firstAttOffset+184]))
     print("Filename Length: " + str(struct.unpack("<b",MFTRecord[firstAttOffset+184:firstAttOffset+185])[0]))
     print("Filename Namespace: " + str(MFTRecord[firstAttOffset+185:firstAttOffset+186]))
-    print("Filename: " + str(MFTRecord[firstAttOffset+186:firstAttOffset+200].decode('utf-16')))
+    print("Filename: " + str(MFTRecord[firstAttOffset+testLength+80:firstAttOffset+testLength+96].decode('utf-16')))
 
     offsetDataRuns = (struct.unpack("<h",MFTRecord[firstAttOffset+232:firstAttOffset+234])[0])
     attLength = struct.unpack("<i",MFTRecord[firstAttOffset+204:firstAttOffset+208])[0]
@@ -237,8 +238,6 @@ if __name__ == "__main__":
         if x > int(signCheck, 16):
             x -= int(signNeg, 16)
 
-        print(x)
-
         length = int(binascii.hexlify(content[lengthBytes:0:-1]),16)    
         offset = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]),16)
 
@@ -251,12 +250,15 @@ if __name__ == "__main__":
     driveLCNLocation = bytesPerSector * sectorsPerCluster * datarun[0][1]
     drive.seek(driveLCNLocation)
     n = 51232
+    lastThing = b""
     for i in range( 0, len(datarun)):
-        testdatarun = drive.read(datarun[i][1])
-        driveLCNLocation += datarun[i][0]
+        temp = drive.read(datarun[i][0])#*bytesPerSector*sectorsPerCluster)
+        testdatarun = lastThing + temp
         drive.seek(0)
-        drive.seek(driveLCNLocation - n)
-        while b"\xff\xff\xff\xff" in testdatarun and len(testdatarun) > 1000:
-            ParseFileRecord(testdatarun[testdatarun.index(b"FILE"):testdatarun.index(b"\xff\xff\xff\xff")+4])
+        drive.seek(driveLCNLocation*bytesPerSector*sectorsPerCluster)
+        driveLCNLocation += (datarun[i][1] * bytesPerSector * sectorsPerCluster)
+        while b"\xff\xff\xff\xff" in testdatarun and len(testdatarun) > bytesPerSector:
+            fileNameGrabber(testdatarun[testdatarun.index(b"FILE"):testdatarun.index(b"\xff\xff\xff\xff")+4])
             testdatarun = (testdatarun[testdatarun.index(b"\xff\xff\xff\xff")+4:])
+        lastThing = testdatarun
     
