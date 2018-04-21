@@ -71,13 +71,14 @@ def ParseFileRecord(record):
 def fileNameGrabber(record):
     try:
         if b"\x10\x00\x00\x00" in record:
-#            zeroethLength = record.index(b"\x10\x00\x00\x00")
             record = record[record.index(b"\x10\x00\x00\x00"):]
             standardLength = struct.unpack("<i", record[4:8])[0]
-            SecondLength = struct.unpack("<i", record[standardLength+4:standardLength+8])[0]
-            nameLength = struct.unpack("<B", record[standardLength+SecondLength-16:standardLength+SecondLength-15])[0] * 2
-            name = record[standardLength + SecondLength-22:standardLength+SecondLength].decode('utf-16')
-            print(name)
+            nameAttrOffset = struct.unpack("<h", record[standardLength+20:standardLength+22])[0]
+            nameLength = struct.unpack("<B", record[(standardLength+nameAttrOffset+64):(standardLength+nameAttrOffset+65)])[0]
+            name = record[standardLength + nameAttrOffset+66:standardLength+nameAttrOffset+66+(nameLength*2)].decode('utf-16')
+            if ".PF" in name:
+                print(name)
+                print(str(record))
     except Exception as e: 
         return
 
@@ -229,8 +230,8 @@ if __name__ == "__main__":
         lengthBytes = int(dataRunHeader[3])
 
         x = int(binascii.hexlify(content[lengthBytes+offsetBytes:lengthBytes:-1]),16)
-        signCheck = '0x7F'
-        signNeg = '0x10'
+        signCheck = '0x7FF'
+        signNeg = '0x10000'
         for i in range(0, lengthBytes):
             signCheck += 'FF'
             signNeg += '00'
@@ -252,13 +253,14 @@ if __name__ == "__main__":
     n = 51232
     lastThing = b""
     for i in range( 0, len(datarun)):
-        temp = drive.read(datarun[i][0])#*bytesPerSector*sectorsPerCluster)
+        temp = drive.read(datarun[i][0]*bytesPerSector*sectorsPerCluster)
         testdatarun = lastThing + temp
         drive.seek(0)
         drive.seek(driveLCNLocation*bytesPerSector*sectorsPerCluster)
         driveLCNLocation += (datarun[i][1] * bytesPerSector * sectorsPerCluster)
         while b"\xff\xff\xff\xff" in testdatarun and len(testdatarun) > bytesPerSector:
             fileNameGrabber(testdatarun[testdatarun.index(b"FILE"):testdatarun.index(b"\xff\xff\xff\xff")+4])
-            testdatarun = (testdatarun[testdatarun.index(b"\xff\xff\xff\xff")+4:])
+            testdatarun = testdatarun[4:]
+            testdatarun = (testdatarun[testdatarun.index(b"FILE"):])
         lastThing = testdatarun
     
