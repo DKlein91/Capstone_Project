@@ -1,0 +1,46 @@
+#:include connect.kv
+
+<Filename>:
+    BoxLayout
+        id: filename_layout
+        orientation: 'vertical'
+        padding: [10,50,10,50]
+        spacing: 50
+
+        Label:
+            text: 'Welcome'
+            font_size: 32
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                text: 'Filename'
+                font_size: 18
+                halign: 'left'
+                text_size: root.width-20, 20
+
+            TextInput:
+                id: filename
+                multiline:False
+                font_size: 28
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Username'
+                halign: 'left'
+                font_size: 18
+                text_size: root.width-20, 20
+
+            TextInput:
+                id: username
+                multiline:False
+                username:True
+                font_size: 28
+
+        Button:
+            text: 'Connexion'
+            font_size: 24
+
+            on_press: root.do_filename(filename.text, username.text)
