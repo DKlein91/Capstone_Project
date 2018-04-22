@@ -1,5 +1,4 @@
-
-import olefile
+﻿import olefile
 import os
 import sys
 import uuid, struct, datetime, argparse, time
@@ -150,18 +149,13 @@ def convert_hex(gethex):
 # This function parses the LNK file header data
 
 def lnk_file_header(header_data):
-    
-
-    header_list = [] # empty List
-    
+    header_list = [] # empty List   
     lnk_header_size = struct.unpack("<L", header_data[0:4])
     header_clsid = header_data[4:20]
-    lnk_header_clsid = uuid.UUID(bytes_le=header_clsid)
-    
+    lnk_header_clsid = uuid.UUID(bytes_le=header_clsid)    
     # These two lines will parse out the individual bits in the Link flags section
     lnk_header_flags = struct.unpack("<I", header_data[20:24])
-    lnk_header_flags_bits = BitArray(hex(lnk_header_flags[0]))
-    
+    lnk_header_flags_bits = BitArray(hex(lnk_header_flags[0])) 
     # These two lines will parse out the individual bits for the file attributes
     lnk_header_file_attrib = struct.unpack("<I", header_data[24:28])
     lnk_header_file_attrib_bits = BitArray(hex(lnk_header_file_attrib[0]))
@@ -414,7 +408,7 @@ def lnk_file_tracker_data(tracker_data):
     print("Birth Object ID (MAC): {}".format(convert_mac(hex(birth_object_mac1[0])+hex(birth_object_mac2[0]))))
 
 
-def destlist_data(destlist_file_data):
+def destlist_data(destlist_file_data, name):
     
     print("<<<<<<<<<<<< Parsing DestList Header >>>>>>>>>>>>>>\n")
     destlist_header_value = destlist_file_data[:4] # Version Number
@@ -435,7 +429,7 @@ def destlist_data(destlist_file_data):
     #print("\n<<<<<<<<<<<<<<<<<<<<<<Parsing DestList stream object>>>>>>>>>>>>>>>>>")
     
     
-    csvfile = open('DestList.csv', 'w')
+    csvfile = open(name + 'DestList.csv', 'w')
     fieldnames = ['E.No.','NetBIOS Name' ,'Last Recorded Access','Access Count',
                   'New(Timestamp)', 'New (MAC)','Seq. No.','Birth(Timestamp)','Birth (MAC)', 'Data']
     destlist_writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n',fieldnames=fieldnames)
@@ -674,109 +668,58 @@ if __name__ == "__main__":
         if action2 in ['-i', 'I', 'input', 'Input']:
             #print("unknown action: " + action2)
             #usage_and_exit()
-            if len(sys.argv) == 4:
-                assert olefile.isOleFile(sys.argv[3])
-                base = os.path.basename(sys.argv[3]) #Get the JumpList file name 
-                #print(os.path.splitext(base)[0]) # split file name from extension
-                dirname = os.path.splitext(base)[0]
-                try:
-                    os.makedirs(dirname)
-                except OSError:
-                    if os.path.exists(dirname):
-                        pass
-                newpath = os.path.join(os.getcwd(),dirname)
-                ole = olefile.OleFileIO(sys.argv[3])
-                print("\n List of Directories:=")
-        
-                print(ole.listdir(streams=True, storages=False)) #print all storage objects (directories) within OLE file
-                newdirectory = os.chdir(newpath)
-                csvfilename = open('LinkFiles.csv', 'w')
-                field_names = ['E.No.','Modified','Accessed',
-                       'Created','Drive Type','Volume Name','Serial No.','File Size','LocalBasePath']
-                lnk_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=field_names)
-                lnk_writer.writeheader()
-                for item in ole.listdir():
-                    file = ole.openstream(item)
-                    file_data = file.read()
-                    header_value = file_data[:4]  # first four bytes value should be 76 bytes
-                    try:
-                        if  header_value[0] == 76:  # first four bytes value should be 76 bytes
-                            newdirectory = os.chdir(newpath)
-                            
-                            csvfile = open('LinkFiles.csv', 'ab')
-                            lnk_header  = lnk_file_header(file_data[:76])
-                            lnk_after_header = lnk_file_after_header(file_data) # after 76 bytes to last 100 bytes
-                            lnk_writer.writerow({'E.No.':item[0]+"("+str(int(item[0],16))+")",
-                                         'Modified':lnk_header[0],'Accessed':lnk_header[1],
-                                         'Created':lnk_header[2],'Drive Type':lnk_after_header[0],
-                                         'Volume Name':lnk_after_header[1],'Serial No.':lnk_after_header[2],
-                                         'File Size':lnk_header[3],'LocalBasePath':lnk_after_header[3]})
-
-                            lnk_tracker_value = file_data[ole.get_size(item)-100:ole.get_size(item)-96]
-                            # print(lnk_tracker_value[0])
-                            if lnk_tracker_value[0] == 96: # link tracker information 4 byte value = 96 
-                                try:
-                                    lnk_tracker = lnk_file_tracker_data(file_data[ole.get_size(item)-100:]) # last 100 bytes
-                                except:
-                                    pass    
-                        else: # if first four byte value is not 76 then it is DestList stream
-                            destlist_header = destlist_data(file_data[:ole.get_size(item)])
-                    
-                    
-                    except:
-                        pass
             if len(sys.argv) == 5:
-                assert olefile.isOleFile(sys.argv[3])
-                base = os.path.basename(sys.argv[3]) #Get the JumpList file name 
-                #print(os.path.splitext(base)[0]) # split file name from extension
-                dirname = os.path.splitext(base)[0]
+                
                 try:
-                    os.makedirs(dirname)
+                    fileList = os.listdir(sys.argv[3])
                 except OSError:
-                    if os.path.exists(dirname):
-                        pass
-                newpath = sys.argv[4] 
-                if not os.path.exists(newpath):
-                    os.makedirs(newpath)
-                ole = olefile.OleFileIO(sys.argv[3])
-                print("\n List of Directories:=")
-        
-                print(ole.listdir(streams=True, storages=False)) #print all storage objects (directories) within OLE file
-                newdirectory = os.chdir(newpath)
-                csvfilename = open('LinkFiles.csv', 'w')
-                field_names = ['E.No.','Modified','Accessed',
-                       'Created','Drive Type','Volume Name','Serial No.','File Size','LocalBasePath']
-                lnk_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=field_names)
-                lnk_writer.writeheader()
-                for item in ole.listdir():
-                    file = ole.openstream(item)
-                    file_data = file.read()
-                    header_value = file_data[:4]  # first four bytes value should be 76 bytes
-                    try:
-                        if  header_value[0] == 76:  # first four bytes value should be 76 bytes
-                            newdirectory = os.chdir(newpath)
-                            csvfile = open('LinkFiles.csv', 'ab')
-                            lnk_header  = lnk_file_header(file_data[:76])
-                            lnk_after_header = lnk_file_after_header(file_data) # after 76 bytes to last 100 bytes
-                            lnk_writer.writerow({'E.No.':item[0]+"("+str(int(item[0],16))+")",
-                                         'Modified':lnk_header[0],'Accessed':lnk_header[1],
-                                         'Created':lnk_header[2],'Drive Type':lnk_after_header[0],
-                                         'Volume Name':lnk_after_header[1],'Serial No.':lnk_after_header[2],
-                                         'File Size':lnk_header[3],'LocalBasePath':lnk_after_header[3]})
+                    usage_and_exit()
 
-                            lnk_tracker_value = file_data[ole.get_size(item)-100:ole.get_size(item)-96]
-                            # print(lnk_tracker_value[0])
-                            if lnk_tracker_value[0] == 96: # link tracker information 4 byte value = 96 
-                                try:
-                                    lnk_tracker = lnk_file_tracker_data(file_data[ole.get_size(item)-100:]) # last 100 bytes
-                                except:
-                                    pass    
-                        else: # if first four byte value is not 76 then it is DestList stream
-                            destlist_header = destlist_data(file_data[:ole.get_size(item)])
+                for file in fileList:
+                    assert olefile.isOleFile(sys.argv[3] + file)
+
+                    newpath = sys.argv[4] 
+                    if not os.path.exists(newpath):
+                        os.makedirs(newpath)
+                    ole = olefile.OleFileIO(sys.argv[3]+file)
+                    print("\n List of Directories:=")
+        
+                    print(ole.listdir(streams=True, storages=False)) #print all storage objects (directories) within OLE file
+                    newdirectory = os.chdir(newpath)
+                    csvfilename = open(file[:file.index(".")] + '-' + 'LinkFiles.csv', 'w')
+                    field_names = ['E.No.','Modified','Accessed',
+                           'Created','Drive Type','Volume Name','Serial No.','File Size','LocalBasePath']
+                    lnk_writer = csv.DictWriter(csvfilename, delimiter=',', lineterminator='\n',fieldnames=field_names)
+                    lnk_writer.writeheader()
+                    for item in ole.listdir():
+                        usedfile = ole.openstream(item)
+                        file_data = usedfile.read()
+                        header_value = file_data[:4]  # first four bytes value should be 76 bytes
+                        try:
+                            if  header_value[0] == 76:  # first four bytes value should be 76 bytes
+                                newdirectory = os.chdir(newpath)
+                                csvfile = open('LinkFiles.csv', 'ab')
+                                lnk_header  = lnk_file_header(file_data[:76])
+                                lnk_after_header = lnk_file_after_header(file_data) # after 76 bytes to last 100 bytes
+                                lnk_writer.writerow({'E.No.':item[0]+"("+str(int(item[0],16))+")",
+                                             'Modified':lnk_header[0],'Accessed':lnk_header[1],
+                                             'Created':lnk_header[2],'Drive Type':lnk_after_header[0],
+                                             'Volume Name':lnk_after_header[1],'Serial No.':lnk_after_header[2],
+                                             'File Size':lnk_header[3],'LocalBasePath':lnk_after_header[3]})
+
+                                lnk_tracker_value = file_data[ole.get_size(item)-100:ole.get_size(item)-96]
+                                # print(lnk_tracker_value[0])
+                                if lnk_tracker_value[0] == 96: # link tracker information 4 byte value = 96 
+                                    try:
+                                        lnk_tracker = lnk_file_tracker_data(file_data[ole.get_size(item)-100:]) # last 100 bytes
+                                    except:
+                                        pass    
+                            else: # if first four byte value is not 76 then it is DestList stream
+                                destlist_header = destlist_data(file_data[:ole.get_size(item)], file[:file.index(".")])
                     
                     
-                    except:
-                        pass
+                        except:
+                            pass
         
     elif action1 in ['-C', '-c', 'custom']:
         usage_and_exit()
