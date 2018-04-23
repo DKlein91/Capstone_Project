@@ -1,0 +1,3 @@
+﻿  stdafx.cpp
+  CppHDDReadTest.cpp
+LINK : fatal error LNK1104: cannot open file 'C:\Users\JHBlancs\source\repos\CppHDDReadTest\Debug\CppHDDReadTest.exe'
