@@ -11,6 +11,12 @@ import JumpListParser
 import LNK_Inspector
 import WTI_main
 
+prefetchCSVFolder = os.getcwd() + "\Prefetch_Results"
+LNKResultsFile = os.getcwd() + "\LNKData.csv"
+jumpListCSVFolder = os.getcwd() + "\JumpList"
+AppCompatCacheResultsFile = os.getcwd() + "\AppCompatCacheResults.csv"
+windowsTrashResultsFile = os.getcwd() + "/trashData.csv"
+
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 
@@ -198,7 +204,7 @@ def GetACCData(sendToResults):
 
 def GetPrefetchFiles(sendToResults):
     #Extract info from prefetch files first
-    for file in os.listdir(os.getswd()+ "\Prefetch_Results"):
+    for file in os.listdir(prefetchCSVFolder):
         if(file == "indexPrefetch.csv"): #This file is different from the others so I elected to skip it
             continue
         
@@ -503,62 +509,63 @@ def MajorSearch():
     #Get all the data ino a single csv file to parse for output
     ConsolidateData()
     #scrape applicable info for the search functions
-    if filenameEntry.get():
-        fileNameSearch = filenameEntry.get()
+    if ui.fileNameLineEdit.text():
+        fileNameSearch = ui.fileNameLineEdit.text()
     else: 
         fileNameSearch = ""
-    if userNameEntry.get():
-        userNameSearch = userNameEntry.get()
+    if ui.userNameLineEdit.text():
+        userNameSearch = ui.userNameLineEdit.text()
     else: 
         userNameSearch = ""
     #Check Button fields
-    createdSearch =  var1.get()
-    accessedSearch = var2.get()
-    modifiedSearch = var3.get()
-    deletedSearch = var4.get()
-    if allCheckButton:
+    createdSearch =  ui.createdCheckBox.isChecked()
+    accessedSearch = ui.accessedCheckBox.isChecked()
+    modifiedSearch = ui.modifiedCheckBox.isChecked()
+    deletedSearch = ui.deletedCheckBox.isChecked()
+    if ui.allTypesCheckBox.isChecked():
         createdSearch = True
         accessedSearch = True
         modifiedSearch = True
         deletedSearch = True
     
-    startDateSearch = datetime.datetime.strptime(startDateBox.get(), '%Y-%m-%d')
-    endDateSearch = datetime.datetime.strptime(endDateBox.get(), '%Y-%m-%d')
+    startDateSearch = datetime.datetime.strptime(ui.startDateEdit.text(), '%m/%d/%Y')
+    endDateSearch = datetime.datetime.strptime(ui.endDateEdit.text(), '%m/%d/%Y')
 
     Search(fileNameSearch, userNameSearch, createdSearch, accessedSearch, modifiedSearch, deletedSearch, startDateSearch, endDateSearch)
-    #if tab5.grid_slaves():
-    #    tab5.grid_slaves()[0].destroy()
-    #raise_frame(tab5)
-    #g1 = GridFrame(tab5, "Search_Results.csv")
+    resultsSwitch("Search_Results.csv")
 
 def resultsSwitch(incsv):
-    resui = Results_Dialog()
-    resultsDialog = QtWidgets.QDialog()
-    Dialog.accept()
-    resui.setupUi(resultsDialog)
-    with open(incsv, "r") as a:
-        b = csv.reader(a, delimiter=",")
-        header = next(b)
-        resui.resultsTableBox.setColumnCount(len(header))
-        for i in range(0, resui.resultsTableBox.columnCount()+1):
-            resui.resultsTableBox.setColumnWidth(i, 150)
-        resui.resultsTableBox.setHorizontalHeaderLabels(header)
-        currentRowCount = resui.resultsTableBox.rowCount()
-        resui.resultsTableBox.setRowCount(len(incsv))
-        for row in b:
-            with suppress(Exception):
-                for col in range(0, resui.resultsTableBox.columnCount()):
-                    if row[col]:
-                        qtwi = QtWidgets.QTableWidgetItem(row[col], 0)
-                    else:
-                        qtwi = QtWidgets.QTableWidgetItem(" ", 0)
-                    resui.resultsTableBox.setItem(currentRowCount, col, qtwi)
-                currentRowCount += 1
-    #resui.resultsTableBox.
-    resultsDialog.show()
-    resultsDialog.activateWindow()
-    resultsDialog.setWindowState(resultsDialog.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
-    app.setActiveWindow = resultsDialog
+   resui = Results_Dialog()
+   resultsDialog = QtWidgets.QDialog()
+   Dialog.accept()
+   resui.setupUi(resultsDialog)
+   with open(incsv, "r") as a:
+       b = csv.reader(a, delimiter=",")
+       c = list(b)
+       rowcount = len(c)
+       print(rowcount)
+       a.seek(0)
+       header = next(b)
+       resui.resultsTableBox.setColumnCount(len(header))
+       """for i in range(0, resui.resultsTableBox.columnCount()+1):
+           resui.resultsTableBox.setColumnWidth(i, 150)"""    
+       resui.resultsTableBox.setHorizontalHeaderLabels(header)
+       resui.resultsTableBox.setRowCount(rowcount)
+       currentRowCount = 0
+       for row in b:
+           with suppress(Exception):
+               for col in range(0, resui.resultsTableBox.columnCount()):
+                   if row[col]:
+                       qtwi = QtWidgets.QTableWidgetItem(row[col], 0)
+                   else:
+                       qtwi = QtWidgets.QTableWidgetItem(" ", 0)
+                   resui.resultsTableBox.setItem(currentRowCount, col, qtwi)
+               currentRowCount += 1
+   #resui.resultsTableBox.
+   resultsDialog.show()
+   resultsDialog.activateWindow()
+   resultsDialog.setWindowState(resultsDialog.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+   app.setActiveWindow = resultsDialog
 
 def mainSwitch():
     mainUI = Ui_Dialog()
@@ -649,17 +656,17 @@ class Ui_Dialog(object):
         self.gridLayout.setHorizontalSpacing(13)
         self.gridLayout.setVerticalSpacing(8)
         self.gridLayout.setObjectName("gridLayout")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.fileNameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.lineEdit_2.setFont(font)
-        self.lineEdit_2.setStyleSheet("padding: 3px;\n"
+        self.fileNameLineEdit.setFont(font)
+        self.fileNameLineEdit.setStyleSheet("padding: 3px;\n"
                                         "border-style: solid;\n"
                                         "border: 2px black;\n"
                                         "border-radius: 8px;")
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.lineEdit_2, 5, 1, 1, 1)
+        self.fileNameLineEdit.setObjectName("fileNameLineEdit")
+        self.gridLayout.addWidget(self.fileNameLineEdit, 5, 1, 1, 1)
         self.fileNameLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -688,20 +695,20 @@ class Ui_Dialog(object):
         self.startDateEdit.setDate(QtCore.QDate(2018, 1, 1))
         self.startDateEdit.setObjectName("startDateEdit")
         self.gridLayout.addWidget(self.startDateEdit, 7, 1, 1, 1)
-        self.endDatePicker = QtWidgets.QDateEdit(self.gridLayoutWidget)
+        self.endDateEdit = QtWidgets.QDateEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.endDatePicker.setFont(font)
-        self.endDatePicker.setStyleSheet("padding: 3px;\n"
+        self.endDateEdit.setFont(font)
+        self.endDateEdit.setStyleSheet("padding: 3px;\n"
                                         "border-style: solid;\n"
                                         "border: 2px black;\n"
                                         "border-radius: 8px;")
-        self.endDatePicker.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
-        self.endDatePicker.setCalendarPopup(True)
-        self.endDatePicker.setDate(QtCore.QDate.currentDate())
-        self.endDatePicker.setObjectName("endDatePicker")
-        self.gridLayout.addWidget(self.endDatePicker, 10, 1, 1, 1)
+        self.endDateEdit.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
+        self.endDateEdit.setCalendarPopup(True)
+        self.endDateEdit.setDate(QtCore.QDate.currentDate())
+        self.endDateEdit.setObjectName("endDateEdit")
+        self.gridLayout.addWidget(self.endDateEdit, 10, 1, 1, 1)
         self.fileActionLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -801,17 +808,17 @@ class Ui_Dialog(object):
         self.startDateLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop|QtCore.Qt.AlignTrailing)
         self.startDateLabel.setObjectName("startDateLabel")
         self.gridLayout.addWidget(self.startDateLabel, 7, 0, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.userNameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.lineEdit.setFont(font)
-        self.lineEdit.setStyleSheet("padding: 3px;\n"
+        self.userNameLineEdit.setFont(font)
+        self.userNameLineEdit.setStyleSheet("padding: 3px;\n"
                                     "border-style: solid;\n"
                                     "border: 2px black;\n"
                                     "border-radius: 8px;")
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 4, 1, 1, 1)
+        self.userNameLineEdit.setObjectName("userNameLineEdit")
+        self.gridLayout.addWidget(self.userNameLineEdit, 4, 1, 1, 1)
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(Dialog)
         self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(80, 130, 1051, 125))
         self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
