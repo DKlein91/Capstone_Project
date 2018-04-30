@@ -5,12 +5,11 @@ from win32api import GetSystemMetrics
 import csv
 from contextlib import suppress
 import datetime
-
-prefetchCSVFolder = os.getcwd() + "\Prefetch_Results"
-LNKResultsFile = os.getcwd() + "\LNKData.csv"
-jumpListCSVFolder = os.getcwd() + "\JumpList"
-AppCompatCacheResultsFile = os.getcwd() + "\AppCompatCacheResults.csv"
-windowsTrashResultsFile = os.getcwd() + "/trashData.csv"
+import AppCompatCacheInspector
+import PrefetchInspector
+import JumpListParser
+import LNK_Inspector
+import WTI_main
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -21,7 +20,18 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
 #SEPARATE PARSER RUNNERS: GRAB CSV DATA AND OUTPUT IT INTO THE RESULTS TAB
 
 def PrefetchRun():
-    
+    prefetchPath = "C:\\Windows\\Prefetch\\"
+    if not os.path.exists(os.path.join(os.getcwd(),"Prefetch_Results")):
+        os.makedirs(os.path.join(os.getcwd(),"Prefetch_Results"))
+    outputPath = os.path.join(os.getcwd(), "Prefetch_Results")
+    for file in os.listdir(prefetchPath):
+        if file.endswith(".pf"):
+            try:
+                p = PrefetchInspector.Prefetch(prefetchPath + file)
+                p.csvPrintSingleFile(outputPath + "\\")
+            except:
+                print ("[ - ] {} could not be parsed".format(i))
+
     strfile = os.getcwd() + "\Prefetch_Results"
     outfile = os.getcwd() + "\PfOutput.csv"
     prefList = os.listdir(strfile)
@@ -42,53 +52,110 @@ def PrefetchRun():
         resultsSwitch(outfile)
 
 def LNKRun():
-    outfile = os.getcwd() + "\LNKData.csv"
+    dirName = "C:\\Users"
+    outputFile = os.path.join(os.getcwd(), "LNKData.csv")
+
+    users = []
+    for name in os.listdir(dirName):
+        if(os.path.exists(os.path.join(dirName, name, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\"))):
+            users.append(name)
+
+    out = ""
+    
+    csvFile = open(outputFile, "w", newline="")
+    writer = csv.writer(csvFile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(["File", "Created", "Accessed", "Modified", "Target Size (bytes)", "Target is on:", "Volume Type", "Volume Serial", "Volume Label", "Target File Path", ""])
+
+    for user in users:
+        for dirs, sdirs, files in os.walk(os.path.join(dirName, user, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\")):
+            for name in files:
+                if(os.path.join(dirs, name)):
+                    try:
+                        out = LNK_Inspector.parse_lnk(os.path.join(dirs, name))
+                        writer.writerow(out)
+                    except:
+                        pass
+    csvFile.close()
+
+    outfile = os.path.join(os.getcwd(), "LNKData.csv")
     resultsSwitch(outfile)
 
 def JumpListRun():
-    jumpListFiles = os.listdir(os.getcwd() + "\JumpList")
+    users = []
+    dirName = "C:\\Users"
+
+    for name in os.listdir(dirName):
+        if(os.path.exists(os.path.join(dirName, name, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\"))):
+            users.append(name)
+    
+    newpath = os.path.join(os.getcwd(), "JumpList")
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+
+    if(len(users) > 0):            
+        for user in users:
+            directory = os.path.join(dirName, user, "AppData\\Roaming\\Microsoft\\Windows\\Recent\\AutomaticDestinations\\")
+            fileList = os.listdir(directory)
+            JumpListParser.parseFileList(fileList, directory, newpath)
+    
+    jumpListFilesLoc = os.getcwd() + "\JumpList"
+    jumpListFiles = os.listdir(jumpListFilesLoc)
+    outfile = open(os.path.join(os.getcwd(), "JumpListAll.csv"), "w")
+    csv_outfile = csv.writer(outfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+    csv_outfile.writerow(["E.No.", "NetBIOS Name", "Last Accessed", "Access Count", "New (Timestamp)", "New (MAC)", "Seq. No.", "Birth (Timestamp)", "Birth (MAC)", "Data"])
+
     for file in jumpListFiles:
         if(file[16:24] != "DestList"):                      #The folder has two types of files: -LinkFiles.csv and DestList.csv. The -LinkFiles are blank. We only want the DestList files.
             continue                                        #If not a DestList file, skip it
 
-        #Open Jump List result file
-        readThisFile = open(os.path.join(jumpListCSVFolder, file), "r")
+        readThisFile = open(os.path.join(jumpListFilesLoc, file), "r")
         csv_readThisFile = csv.reader(x.replace('\0', '') for x in readThisFile)
 
         count = 0
-        for i in csv_readThisFile:
-            if(count == 0):                                 #Confirm the row is not the header
+        for row in csv_readThisFile:
+            if(count == 0):
                 count += 1
-                continue                                    #Skip row if header
-
-            row = []
-        
-            name,path = CarveFilenameFromPath(i[9])
-            row.append(name)                                #Add filename
-            row.append(path)                                #Add file path
-            row.append("")                                  #Skip creation date
-            if(len(i[7]) > 0):                              #Confirm the accessed date cell is not blank
-                row.append(i[7])                            #Add last accessed date
-            else:
-                row.append("")                              #If no date, add blank
-            row.append("")                                  #Skip modified date
-            row.append("")                                  #Skip deletion date
-            row.append(i[3])                                #Add run count
-            for j in range(0,11):                           #Skip the next 11 cells
-                row.append("")
-            if(i[9].find("Users")):                         #Confirm username is in file path
-                user = CarveUserFromPath(i[9])
-                row.append(user)                            #Add username
-            else:
-                row.append("")                              #If username is not in file path, skip username field
-            sendToResults.writerow(row)                        #Write row to the aggregated results file
+                continue
+            csv_outfile.writerow(row)
         readThisFile.close()                                #Close Jump List result file
+    outfile.close()
+
+    outfile = os.path.join(os.getcwd(), "JumpListAll.csv")
+    resultsSwitch(outfile)
 
 def TrashRun():
-    outfile = os.getcwd() + "\trashData.csv"
+    dirName = "C:\\$Recycle.Bin\\"
+    outputFile = os.path.join(os.getcwd(), "trashData.csv")
+
+    filename = open(outputFile, "w", newline='')
+    writer = csv.writer(filename, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(["Name", "Path", "Size", "Deleted"])
+
+    for dirs, sdirs, files in os.walk(dirName):
+        for name in files:
+            if os.path.isfile(os.path.join(dirs,name)):
+                try:
+                    openThisFile = open(os.path.join(dirs,name), "rb")
+                    osVersionTest = openThisFile.read(8)
+                    size = os.path.getsize(os.path.join(dirs,name))
+                    if osVersionTest == b'\x02\x00\x00\x00\x00\x00\x00\x00':
+                        csvrow = WTI_main.parseTrash(openThisFile, size, True)
+                        writer.writerow(csvrow)
+                    elif osVersionTest == b'\x01\x00\x00\x00\x00\x00\x00\x00':
+                        if size == 544:
+                            WTI_main.parseWin8Trash(openThisFile)
+                        else:
+                            WTI_main.parseTrash(openThisFile, size, False)
+                except:
+                    pass
+
+    outfile = os.path.join(os.getcwd(), "trashData.csv")
     resultsSwitch(outfile)
 
 def AppCompatCacheRun():
+    entries = AppCompatCacheInspector.get_local_data()
+    AppCompatCacheInspector.write_it(entries, os.getcwd())
+
     accFile = open(r"AppCompatCacheResults.csv","rb")
     data = accFile.read()
     accFile.close()
@@ -131,7 +198,7 @@ def GetACCData(sendToResults):
 
 def GetPrefetchFiles(sendToResults):
     #Extract info from prefetch files first
-    for file in os.listdir(prefetchCSVFolder):
+    for file in os.listdir(os.getswd()+ "\Prefetch_Results"):
         if(file == "indexPrefetch.csv"): #This file is different from the others so I elected to skip it
             continue
         
@@ -436,30 +503,33 @@ def MajorSearch():
     #Get all the data ino a single csv file to parse for output
     ConsolidateData()
     #scrape applicable info for the search functions
-    if ui.fileNameLineEdit.text():
-        fileNameSearch = ui.fileNameLineEdit.text()
+    if filenameEntry.get():
+        fileNameSearch = filenameEntry.get()
     else: 
         fileNameSearch = ""
-    if ui.userNameLineEdit.text():
-        userNameSearch = ui.userNameLineEdit.text()
+    if userNameEntry.get():
+        userNameSearch = userNameEntry.get()
     else: 
         userNameSearch = ""
     #Check Button fields
-    createdSearch =  ui.createdCheckBox.isChecked()
-    accessedSearch = ui.accessedCheckBox.isChecked()
-    modifiedSearch = ui.modifiedCheckBox.isChecked()
-    deletedSearch = ui.deletedCheckBox.isChecked()
-    if ui.allTypesCheckBox.isChecked():
+    createdSearch =  var1.get()
+    accessedSearch = var2.get()
+    modifiedSearch = var3.get()
+    deletedSearch = var4.get()
+    if allCheckButton:
         createdSearch = True
         accessedSearch = True
         modifiedSearch = True
         deletedSearch = True
     
-    startDateSearch = datetime.datetime.strptime(ui.startDateEdit.text(), '%m/%d/%Y')
-    endDateSearch = datetime.datetime.strptime(ui.endDateEdit.text(), '%m/%d/%Y')
+    startDateSearch = datetime.datetime.strptime(startDateBox.get(), '%Y-%m-%d')
+    endDateSearch = datetime.datetime.strptime(endDateBox.get(), '%Y-%m-%d')
 
     Search(fileNameSearch, userNameSearch, createdSearch, accessedSearch, modifiedSearch, deletedSearch, startDateSearch, endDateSearch)
-    resultsSwitch("Search_Results.csv")
+    #if tab5.grid_slaves():
+    #    tab5.grid_slaves()[0].destroy()
+    #raise_frame(tab5)
+    #g1 = GridFrame(tab5, "Search_Results.csv")
 
 def resultsSwitch(incsv):
     resui = Results_Dialog()
@@ -468,17 +538,13 @@ def resultsSwitch(incsv):
     resui.setupUi(resultsDialog)
     with open(incsv, "r") as a:
         b = csv.reader(a, delimiter=",")
-        c = list(b)
-        rowcount = len(c)
-        print(rowcount)
-        a.seek(0)
         header = next(b)
         resui.resultsTableBox.setColumnCount(len(header))
-        """for i in range(0, resui.resultsTableBox.columnCount()+1):
-            resui.resultsTableBox.setColumnWidth(i, 150)"""    
+        for i in range(0, resui.resultsTableBox.columnCount()+1):
+            resui.resultsTableBox.setColumnWidth(i, 150)
         resui.resultsTableBox.setHorizontalHeaderLabels(header)
-        resui.resultsTableBox.setRowCount(rowcount)
         currentRowCount = resui.resultsTableBox.rowCount()
+        resui.resultsTableBox.setRowCount(len(incsv))
         for row in b:
             with suppress(Exception):
                 for col in range(0, resui.resultsTableBox.columnCount()):
@@ -520,12 +586,12 @@ class Results_Dialog(object):
         self.titleLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.titleLabel.setObjectName("titleLabel")
         ResultsDialog.setObjectName("ResultsDialog")
-        ResultsDialog.resize(1280,720)
+        ResultsDialog.setFixedSize(1280, 720)
         self.resultsTableBox = QtWidgets.QTableWidget(ResultsDialog)
-        self.resultsTableBox.setGeometry(QtCore.QRect(10, 100, 1000, 500))
+        self.resultsTableBox.setGeometry(QtCore.QRect(10, 10, 1260, 650))
         self.resultsTableBox.setObjectName("resultsTableBox")
         self.returnToMainButton = QtWidgets.QPushButton(ResultsDialog)
-        self.returnToMainButton.setGeometry(QtCore.QRect(10, 650, 100, 40))
+        self.returnToMainButton.setGeometry(QtCore.QRect(10, 670, 100, 40))
         self.returnToMainButton.setStyleSheet("background-color: white;\n"
                                         "    border-style: outset;\n"
                                         "    border-width: 2px;\n"
@@ -535,7 +601,7 @@ class Results_Dialog(object):
                                         "    min-width: 10em;\n"
                                         "    padding: 6px;")
         self.returnToMainButton.setObjectName("returnToMainButton")
-        self.returnToMainButton.clicked.connect(lambda: mainSwitch())
+        self.returnToMainButton.clicked.connect(mainSwitch)
         self.widget = QtWidgets.QWidget(ResultsDialog)
         self.widget.setGeometry(QtCore.QRect(0, 0, 1281, 721))
         self.widget.setMinimumSize(ResultsDialog.frameSize())
@@ -559,7 +625,7 @@ class Results_Dialog(object):
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1280, 720)
+        Dialog.setFixedSize(1280, 720)
 
         Dialog.setStyleSheet("")
         self.titleLabel = QtWidgets.QLabel(Dialog)
@@ -583,17 +649,17 @@ class Ui_Dialog(object):
         self.gridLayout.setHorizontalSpacing(13)
         self.gridLayout.setVerticalSpacing(8)
         self.gridLayout.setObjectName("gridLayout")
-        self.fileNameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.fileNameLineEdit.setFont(font)
-        self.fileNameLineEdit.setStyleSheet("padding: 3px;\n"
+        self.lineEdit_2.setFont(font)
+        self.lineEdit_2.setStyleSheet("padding: 3px;\n"
                                         "border-style: solid;\n"
                                         "border: 2px black;\n"
                                         "border-radius: 8px;")
-        self.fileNameLineEdit.setObjectName("fileNameLineEdit")
-        self.gridLayout.addWidget(self.fileNameLineEdit, 5, 1, 1, 1)
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.gridLayout.addWidget(self.lineEdit_2, 5, 1, 1, 1)
         self.fileNameLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -622,20 +688,20 @@ class Ui_Dialog(object):
         self.startDateEdit.setDate(QtCore.QDate(2018, 1, 1))
         self.startDateEdit.setObjectName("startDateEdit")
         self.gridLayout.addWidget(self.startDateEdit, 7, 1, 1, 1)
-        self.endDateEdit = QtWidgets.QDateEdit(self.gridLayoutWidget)
+        self.endDatePicker = QtWidgets.QDateEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.endDateEdit.setFont(font)
-        self.endDateEdit.setStyleSheet("padding: 3px;\n"
+        self.endDatePicker.setFont(font)
+        self.endDatePicker.setStyleSheet("padding: 3px;\n"
                                         "border-style: solid;\n"
                                         "border: 2px black;\n"
                                         "border-radius: 8px;")
-        self.endDateEdit.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
-        self.endDateEdit.setCalendarPopup(True)
-        self.endDateEdit.setDate(QtCore.QDate.currentDate())
-        self.endDateEdit.setObjectName("endDateEdit")
-        self.gridLayout.addWidget(self.endDateEdit, 10, 1, 1, 1)
+        self.endDatePicker.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom))
+        self.endDatePicker.setCalendarPopup(True)
+        self.endDatePicker.setDate(QtCore.QDate.currentDate())
+        self.endDatePicker.setObjectName("endDatePicker")
+        self.gridLayout.addWidget(self.endDatePicker, 10, 1, 1, 1)
         self.fileActionLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -735,17 +801,17 @@ class Ui_Dialog(object):
         self.startDateLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop|QtCore.Qt.AlignTrailing)
         self.startDateLabel.setObjectName("startDateLabel")
         self.gridLayout.addWidget(self.startDateLabel, 7, 0, 1, 1)
-        self.userNameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("Trebuchet MS")
         font.setPointSize(10)
-        self.userNameLineEdit.setFont(font)
-        self.userNameLineEdit.setStyleSheet("padding: 3px;\n"
+        self.lineEdit.setFont(font)
+        self.lineEdit.setStyleSheet("padding: 3px;\n"
                                     "border-style: solid;\n"
                                     "border: 2px black;\n"
                                     "border-radius: 8px;")
-        self.userNameLineEdit.setObjectName("userNameLineEdit")
-        self.gridLayout.addWidget(self.userNameLineEdit, 4, 1, 1, 1)
+        self.lineEdit.setObjectName("lineEdit")
+        self.gridLayout.addWidget(self.lineEdit, 4, 1, 1, 1)
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(Dialog)
         self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(80, 130, 1051, 125))
         self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
@@ -871,6 +937,7 @@ class Ui_Dialog(object):
                                             "    min-width: 10em;\n"
                                             "    padding: 6px;")
         self.jumpListButton.setObjectName("jumpListButton")
+        self.jumpListButton.clicked.connect(JumpListRun)
         self.horizontalLayout_6.addWidget(self.jumpListButton)
         self.appCompatCacheButton = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         font = QtGui.QFont()
@@ -888,6 +955,7 @@ class Ui_Dialog(object):
                                                 "    min-width: 10em;\n"
                                                 "    padding: 6px;")
         self.appCompatCacheButton.setObjectName("appCompatCacheButton")
+        self.appCompatCacheButton.clicked.connect(AppCompatCacheRun)
         self.horizontalLayout_6.addWidget(self.appCompatCacheButton)
         self.verticalLayout_3.addLayout(self.horizontalLayout_6)
         self.trashButton = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
@@ -906,6 +974,8 @@ class Ui_Dialog(object):
                                     "    min-width: 10em;\n"
                                     "    padding: 6px;")
         self.trashButton.setObjectName("trashButton")
+        self.trashButton.clicked.connect(TrashRun)
+
         self.verticalLayout_3.addWidget(self.trashButton)
         self.widget.raise_()
         self.titleLabel.raise_()
@@ -973,6 +1043,7 @@ class Ui_Dialog(object):
         self.jumpListButton.destroy()
         self.appCompatCacheButton.destroy()
         self.trashButton.destroy()
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
